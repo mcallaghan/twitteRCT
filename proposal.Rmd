@@ -1,0 +1,22 @@
+---
+title: "Proposal"
+output: pdf_document
+---
+
+```{r}
+library("twitteR")
+library("igraph")
+source("define_keys.R")
+
+
+setup_twitter_oauth(
+  CONSUMER_KEY,
+  CONSUMER_SECRET,
+  ACCESS_TOKEN,
+  ACCESS_TOKEN_SECRET
+)
+
+accounts <- c("realDonaldTrump","HillaryClinton")
+
+```
+
