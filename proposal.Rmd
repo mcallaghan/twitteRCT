@@ -17,6 +17,9 @@ setup_twitter_oauth(
 )
 
 accounts <- c("realDonaldTrump","HillaryClinton")
+account <- accounts[1]
+
+start<-getUser(account) 
 
 ```
 
