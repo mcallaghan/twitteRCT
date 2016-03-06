@@ -1,5 +1,5 @@
 library("twitteR")
-library("igraph")
+
 source("define_keys.R")
 
 
@@ -16,7 +16,7 @@ retry <- 1000000
 
 s <- Sys.time()
 for (a in accounts) {
-  followerIDs <- getUser(a)$getFollowerIDs(retryOnRateLimit=10)
+  followerIDs <- getUser(a)$getFollowerIDs(retryOnRateLimit=retry)
   followers <- data.frame(followerIDs=followerIDs)
   saveRDS(followers, file=paste0(a,".Rda"))
 }
