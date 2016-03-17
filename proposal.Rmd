@@ -8,7 +8,7 @@ output: pdf_document
 
 # Experimental Design
 
-For [two] political candidates, we create a subset of their followers whose behaviour we observe, the evaluation sample. A random group of [`r n`] of the candidate's followers is selected. Those accounts which are not active recently [or not actively engaging with candidate] are removed from the sample, and another random sample is added to those who are active. This repeats until we have a random sample of [`r n`] active followers of the candidate 
+For [two] political candidates blab la bla, we create a subset of their followers whose behaviour we observe, the evaluation sample. A random group of [`r n`] of the candidate's followers is selected. Those accounts which are not active recently [or not actively engaging with candidate] are removed from the sample, and another random sample is added to those who are active. This repeats until we have a random sample of [`r n`] active followers of the candidate 
 The evaluation sample is split into a treatment and control group as follows.
 
 ```{r echo=FALSE,message=FALSE, fig.align='center'}
