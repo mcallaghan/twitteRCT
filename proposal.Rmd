@@ -1,14 +1,17 @@
 ---
-title: "Proposal"
+title: "TwitteRCT Proposal"
 output: pdf_document
 ---
+
+`r n <- "n"`
 
 
 # Experimental Design
 
-For [two] political candidates, we create a subset of their followers whose behaviour we observe. This subset is split into a treatment and control group as follows.
+For [two] political candidates, we create a subset of their followers whose behaviour we observe, the evaluation sample. A random group of [`r n`] of the candidate's followers is selected. Those accounts which are not active recently [or not actively engaging with candidate] are removed from the sample, and another random sample is added to those who are active. This repeats until we have a random sample of [`r n`] active followers of the candidate 
+The evaluation sample is split into a treatment and control group as follows.
 
-```{r echo=FALSE,message=FALSE}
+```{r echo=FALSE,message=FALSE, fig.align='center'}
 
 library(diagram)
 
@@ -23,7 +26,7 @@ labels <- vector()
 treearrow(from=elpos[1,],to=elpos[2,],lwd=6) 
 labels[1] <- "Population \n (all candidate followers)\nn=Large"
 treearrow(from=elpos[2,],to=elpos[3:4,],lwd=6) 
-labels[2] <- "Experimental group\n(random sample of\nactive followers)n~1000"
+labels[2] <- paste0("Evaluataion sample\n(random sample of\nactive followers)n~",n)
 labels[3] <- "Treatment group\nn/2"
 labels[4] <- "Control group\nn/2"
 
@@ -36,18 +39,21 @@ for ( i in 1:length(labels)) textround (elpos[i,],radx=0.08,rady=0.08,lab=labels
 
 - The Rate limit for posting tweets is 2400 per day
 - The Rate limit for direct messages is 1000 per day
+- Risks of being identified as spam increase with the volume of tweets sent (see below)
 
-We should identify a minimum experimental group size for statistical relevance and work from there.
+BUT, we may be able to create multiple accounts, and multiple robots. Additionally, we do not have to tweet at the treatment group every day - we could have a larger group with fewer tweets, or a smaller group with more tweets.
+
+$\rightarrow$ We should identify a minimum experimental group size for statistical significance and work from there.
 
 ## Treatment Definition
 
 We Provide information to the treatment group about the veracity of the claims made by the candidate they follow. [Politifact.com](http://www.politifact.com/) won the Pulitzer prize for providing fact checking. They have an RSS feed for each candidate. Every time Politifact write a post about the candidate, we send a tweet summarising the fact-checking judgement and [providing a link] (this could make us look more like spam) to our treatment group.
 
-Trump's last 10 checked statements go back to the 23/02/2016 = 0.83 per day
+As of 17/03/2016, Donald Trump's last 10 appearances on Politifact go back to the 04/03/2016 = 0.77 per day
 
-Clinton's last 10 go back to 07/02/2016 = 0.35 per day
+Clinton's last 10 go back to 26/02/2016 = 0.5 per day
 
-Tweets are put into an ``outbox'' as statements are checked, and the outbox is sent to treatment groups at a steady rate.
+We can construct tweets as candidates appear on Politifact and place them into an ``outbox''. The outbox can then be sent to treatment groups at a steady rate.
 
 # Drawbacks
 
@@ -57,20 +63,26 @@ Tweets are put into an ``outbox'' as statements are checked, and the outbox is s
 
 The general guidelines say this 
 
-> @Replies You can direct a Tweet at a specific Twitter user using @replies and mentions. The @reply feature is intended to make communication between users easier, so please don't abuse it by posting duplicated, unsolicited @replies to lots of users. This is considered spam behavior!
+> @Replies. You can direct a Tweet at a specific Twitter user using @replies and mentions. The @reply feature is intended to make communication between users easier, so please don't abuse it by posting duplicated, unsolicited @replies to lots of users. This is considered spam behavior!
 
 In the [automation section](https://support.twitter.com/articles/76915) it says this
 
-> Automated replies and mentions The reply and mention functions are intended to make communication between users easier, and automating these processes in order to reach many users is considered an abuse of the feature. If your application creates or facilitates automated reply messages or mentions to many users, the recipients must request or otherwise indicate an intent to be contacted in advance. For example, sending automated replies based on keyword searches is not permitted. Users must also have a clear and easy way to opt-out of receiving automated reply messages and mentions from your application. Note: media or brands using auto-response campaigns must request approval from Twitter and may be subject to additional rules. Please reach out to your account or partner manager for assistance. If you do not have a partner manager but are interested in managed client services, contact us.
+> Automated replies and mentions. The reply and mention functions are intended to make communication between users easier, and automating these processes in order to reach many users is considered an abuse of the feature. If your application creates or facilitates automated reply messages or mentions to many users, the recipients must request or otherwise indicate an intent to be contacted in advance. For example, sending automated replies based on keyword searches is not permitted. Users must also have a clear and easy way to opt-out of receiving automated reply messages and mentions from your application. Note: media or brands using auto-response campaigns must request approval from Twitter and may be subject to additional rules. Please reach out to your account or partner manager for assistance. If you do not have a partner manager but are interested in managed client services, contact us.
 
-Think we can provide a way to opt-out, but slightly worrying... Even if we get away with it, does it make it less policy relevant? Perhaps its evidence on the usefulness of twitter that is more experimentally clean than it would be if we didn't use mentions. Can possibly be extrapolated to ads
-
+We cannot make this opt-in, but we could provide a way to opt-out. 
 
 ## Ways around it:
 
 - Doing tweets manually. 1000 tweets per day, say, between 5 people would be 10 minutes each or so.
 - Setting up multiple accounts. This way we are less likely to be identified as mass tweeters
 - Setting up multiple bots, and use tor to change the IP addresses.
+- Using Twitter Ads, and paying to target users.
+
+If we find a way around the rules, does it make it less policy relevant? 
+
+Perhaps its evidence on the usefulness of twitter that is more experimentally clean than it would be if we didn't use mentions. 
+
+Whether we use ads or not, this could possibly be extrapolated to ads
 
 
 
