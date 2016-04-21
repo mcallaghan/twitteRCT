@@ -5,6 +5,9 @@ output: pdf_document
 
 `r n <- "n"`
 
+# introduction
+
+“The political ignorance of the American voter is one of the best-documented features of contemporary politics” (Bartels, 1996: 194). Not surprisingly therefore, the role of information in shaping political judgement has been a prominent subject in political science (see for example Althaus, 1998; Bartels, 1996). Previous experimental studies in this context have for example focused on the effect of providing factual information on issue-specific policy preferences (Gilens, 2001; Howell and West, 2009; Sides and Citrin, 2007) or on the effect of corrective information on reducing prominent misperceptions about politics (Nyhan and Reifler, 2010). In light of the upcoming presidential elections in the United States, we want to add to this literature by proposing an experiment in which Twitter followers of two potential presidential candidates (Hillary Clinton and Donald Trump) will be exposed to “fact-checks” of the candidates’ public statements. Against the background of social networks (such as Twitter) becoming a more important source of information as well as a place where people engage with political processes, we want to address the question whether followers of either of these two candidates change their behaviour pertaining to the candidate (such as liking or retweeting their posts) after being exposed to information about the veracity of the candidate’s statements. 
 
 # Experimental Design
 
@@ -14,6 +17,7 @@ The evaluation sample is split into a treatment and control group as follows.
 ```{r echo=FALSE,message=FALSE, fig.align='center'}
 
 library(diagram)
+library(ggplot2)
 
 par(mfrow=c(1,1))
 par(mar=c(0,0,0,0))
@@ -24,16 +28,58 @@ elpos<-coordinates (c(1,1, 2, 2))
 labels <- vector()
 ##draw arrows from each row to next row
 treearrow(from=elpos[1,],to=elpos[2,],lwd=6) 
-labels[1] <- "Population \n (all candidate followers)\nn=Large"
+labels[1] <- "Population \n (all candidate i followers)\nn=Large"
 treearrow(from=elpos[2,],to=elpos[3:4,],lwd=6) 
-labels[2] <- paste0("Evaluataion sample\n(random sample of\nactive followers)n~",n)
-labels[3] <- "Treatment group\nn/2"
-labels[4] <- "Control group\nn/2"
+labels[2] <- paste0("Evaluataion sample\n(random sample of\neligible followers)n=500")
+labels[3] <- "Treatment group\nn=250"
+labels[4] <- "Control group\nn=250"
 
 ##plot text boxes
+#png("experiment_design.png",width=800,height=500)
 for ( i in 1:length(labels)) textround (elpos[i,],radx=0.08,rady=0.08,lab=labels[i])
+#dev.off()
+
 
 ```
+
+```{r echo=FALSE,message=FALSE, fig.align='center'}
+
+library(diagram)
+library(ggplot2)
+
+par(mfrow=c(1,1))
+par(mar=c(0,0,0,0))
+##initialize new grphics device
+openplotmat()
+##number of elements per row
+elpos<-coordinates (c(1,2,2, 4, 4))
+labels <- vector()
+##draw arrows from each row to next row
+treearrow(from=elpos[2,],to=elpos[4,],lwd=6) 
+treearrow(from=elpos[3,],to=elpos[5,],lwd=6) 
+labels[1] <- "The Twittersphere"
+treearrow(from=elpos[1,],to=elpos[2:3,],lwd=6) 
+labels[2] <- "Population \n (all Clinton followers)\nn=Large"
+labels[3] <- "Population \n (all Trump followers)\nn=Large"
+treearrow(from=elpos[4,],to=elpos[6:7,],lwd=6) 
+treearrow(from=elpos[5,],to=elpos[8:9,],lwd=6) 
+labels[4] <- paste0("Evaluation sample\n(random sample of\neligible followers)n=500")
+labels[6] <- "Treatment group\nn=250"
+labels[7] <- "Control group\nn=250"
+
+labels[5] <- paste0("Evaluation sample\n(random sample of\neligible followers)n=500")
+labels[8] <- "Treatment group\nn=250"
+labels[9] <- "Control group\nn=250"
+
+##plot text boxes
+#png("experiment_design.png",width=800,height=500)
+for ( i in 1:5) textround (elpos[i,],radx=0.08,rady=0.08,lab=labels[i])
+for ( i in 6:9) textround (elpos[i,],radx=0.05,rady=0.06,lab=labels[i])
+#dev.off()
+
+
+```
+
 
 ### Size of n
 

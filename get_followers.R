@@ -27,4 +27,5 @@ print(e-s)
 save(s,file="start.RData")
 save(e,file="end.RData")
 
+trump <- readRDS("realDonaldTrump.Rda")
 
