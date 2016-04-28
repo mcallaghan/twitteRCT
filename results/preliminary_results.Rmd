@@ -1,0 +1,237 @@
+---
+title: "Preliminary Results"
+author: "Group 1"
+date: "April 25, 2016"
+output: pdf_document
+---
+
+
+
+```{r connect,echo=FALSE,warning=FALSE,message=FALSE}
+
+setwd("..")
+
+library(RMySQL)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(plm)
+library(knitr)
+
+con <- try(dbConnect(MySQL(),
+                     group='trump'),
+           silent=TRUE
+           )
+
+if(class(con) == "try-error") {
+  load("data/likes.Rda")
+  load("data/tweets.Rda")
+  load("data/sent_tweets.Rda")
+  load("data/sample.Rda")
+  load("data/sample_info.Rda")
+  load("data/last_download.Rda")
+} else {
+  sql = "SELECT * FROM all_likes
+    WHERE `like_date` > '2016-04-01'
+  "
+  
+  likes <- as.data.frame(dbGetQuery(con,sql)) 
+  save(likes,file="data/likes.Rda")
+  
+  sql = "SELECT * FROM observed_tweets
+    WHERE `tweet_date` > '2016-04-01'
+  "
+  
+  tweets <- as.data.frame(dbGetQuery(con,sql)) 
+  save(tweets,file="data/tweets.Rda")
+  
+  sql = "SELECT * FROM tweets
+    WHERE time_sent > '2016-04-10'
+  "
+  
+  sent_tweets <- as.data.frame(dbGetQuery(con,sql)) 
+  save(sent_tweets,file="data/sent_tweets.Rda")
+  
+  sql = "SELECT user_id,username,t_group
+    FROM observation_group
+  "
+  
+  sample <- as.data.frame(dbGetQuery(con,sql)) 
+  save(sample,file="data/sample.Rda")
+  
+  sql = "SELECT user_id,followers_count,friends_count,location
+    FROM trump_tweeters
+  "
+  
+  sample_info <- as.data.frame(dbGetQuery(con,sql)) 
+  save(sample_info,file="data/sample_info.Rda")
+  
+  now <- Sys.time()
+  save(now,file="data/last_download.Rda")
+  
+}
+
+
+```
+
+
+
+```{r process, echo=FALSE,message=FALSE,warning=FALSE}
+
+sample_info <- sample %>%
+  left_join(sample_info)
+
+#############################################
+## Get counts of n likes for each user on each day
+like_users <- likes %>%
+  group_by(user_id,like_date) %>%
+  summarise(
+    like_n = length(PID)
+    )
+
+#############################################
+## Get counts of n tweet data fo each user on each day
+tweet_users <- tweets %>%
+  group_by(user_id,tweet_date) %>%
+  summarise(
+    tweet_n = length(PID),
+    trump_rt_n = sum(trump_retweet),
+    trump_mention_n = sum(trump_mention),
+    MAGA_n = sum(MAGA),
+    trump_keyword_n = sum(trump_keyword)
+  )
+
+#############################################
+## Get counts of sent tweets at each user on each day
+sent_tweets$day <- as.character(as.Date(sent_tweets$time_sent))
+sent_tweets_users <- sent_tweets %>%
+  group_by(user,day) %>%
+  summarise(
+    sent_n = length(PID)
+  )
+
+days <- sort(unique(like_users$like_date))
+users <- unique(like_users$user_id)
+
+user_id <- rep(users,each=length(days))
+date <- rep(days,times=length(users))
+
+user_days <- data.frame(user_id,date)
+
+user_days <- user_days %>%
+  left_join(like_users,by=c("date" = "like_date","user_id" = "user_id")) %>%
+  left_join(tweet_users,by=c("date" = "tweet_date","user_id" = "user_id")) %>%
+  right_join(sample) %>%
+  left_join(sent_tweets_users,by=c("date" = "day","username" = "user")) %>%
+  select(user_id,date,username,t_group,like_n:trump_keyword_n,sent_n)
+
+
+user_days[is.na(user_days)] <- 0
+
+#########################################
+## Summarise Group Averages
+group_avs <-  user_days %>% 
+  group_by(t_group,date) %>%
+  summarise(
+    average_likes = mean(like_n),
+    average_rts = mean(trump_rt_n),
+    average_mentions = mean(trump_mention_n),
+    average_MAGA = mean(MAGA_n),
+    average_keywords = mean(trump_keyword_n),
+    average_tweets = mean(tweet_n),
+    average_sent = mean(sent_n)
+  ) 
+
+user_avs <-  user_days %>% 
+  group_by(user_id) %>%
+  summarise(
+    average_likes = mean(like_n),
+    average_rts = mean(trump_rt_n),
+    average_mentions = mean(trump_mention_n),
+    average_MAGA = mean(MAGA_n),
+    average_keywords = mean(trump_keyword_n),
+    average_tweets = mean(tweet_n),
+    average_sent = mean(sent_n)
+  ) 
+
+
+
+```
+
+The data in this document were pulled from a database on `r format(now,"%B %d %Y")` at `r format(now,"%H:%M")`. As like and tweet data is collected on a rolling basis, not all likes and tweets made up to that time are included.
+
+## Descriptive Statistics
+
+```{r descristive, echo=FALSE,message=FALSE,warning=FALSE}
+
+user_avs_long <- user_avs %>%
+  left_join(sample_info) %>%
+  select(user_id,username,t_group,location,average_likes:average_keywords,followers_count,friends_count) %>%
+  gather(variable,value,average_likes:friends_count) 
+
+user_avs_summary <- user_avs_long %>%
+  group_by(variable) %>%
+  summarise(
+    mean = mean(value),
+    minimum = min(value),
+    maximum = max(value)
+  ) %>%
+  ungroup()
+
+user_avs_summary_split <- user_avs_long %>%
+  group_by(variable,t_group) %>%
+  summarise(
+    mean = mean(value),
+    minimum = min(value),
+    maximum = max(value)
+  ) %>%
+  ungroup()
+
+treatment <- user_avs_summary_split %>%
+  filter(t_group == "T") %>%
+  select(-t_group)
+
+control <- user_avs_summary_split  %>%
+  filter(t_group == "C") %>%
+  select(-t_group)
+
+#kable(treatment)
+
+#kable(control)
+
+kable(user_avs_summary)
+
+
+
+hist(user_avs$average_likes,breaks=seq(0,max(user_avs$average_likes)+1,0.5))
+
+#hist(user_avs$average_tweets,breaks=seq(0,max(user_avs$average_tweets)+1,0.5))
+
+#hist(user_avs$average_mentions,breaks=seq(0,max(user_avs$average_mentions)+1,0.5))
+
+```
+
+We measure likes of trump tweets on each day, compare treatment and control groups, and show the fraction of the treatment group receiving treatment on each day.
+
+```{r likes, echo=FALSE,message=FALSE,warning=FALSE}
+
+#####################################
+## Plot likes
+ggplot(group_avs,
+       aes(date,average_likes,colour=t_group,group=t_group)) +
+  geom_bar(
+    aes(date,average_sent,fill=t_group),
+    alpha = 0.3,
+    stat="identity",
+    show.legend = FALSE
+  ) +
+  geom_line() + 
+  geom_point(shape=4,size=3) +
+  theme_bw() + 
+  theme(
+    axis.text.x = element_text(angle=90,hjust = 1,vjust = 0.5)
+  )
+
+```
+
+
