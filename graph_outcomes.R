@@ -3,47 +3,25 @@ library(ggplot2)
 library(dplyr)
 library(tidyr)
 library(plm)
+library(R.utils)
+
+sourceDirectory("functions/",modifiedOnly = FALSE)
+
 
 con <- try(dbConnect(MySQL(),
                      group='trump'),
            silent=TRUE
            )
 
-if(class(con) == "try-error") {
-  load("data/likes.Rda")
-  load("data/tweets.Rda")
-  load("data/sent_tweets.Rda")
-  load("data/sample.Rda")
-} else {
-  sql = "SELECT * FROM all_likes
-    WHERE `like_date` > '2016-04-01'
-  "
-  
-  likes <- as.data.frame(dbGetQuery(con,sql)) 
-  save(likes,file="data/likes.Rda")
-  
-  sql = "SELECT * FROM observed_tweets
-    WHERE `tweet_date` > '2016-04-01'
-    AND reply = 0
-  "
-  
-  tweets <- as.data.frame(dbGetQuery(con,sql)) 
-  save(tweets,file="data/tweets.Rda")
-  
-  sql = "SELECT * FROM tweets
-    WHERE time_sent > '2016-04-10'
-  "
-  
-  sent_tweets <- as.data.frame(dbGetQuery(con,sql)) 
-  save(sent_tweets,file="data/sent_tweets.Rda")
-  
-  sql = "SELECT user_id,username,t_group,location,country,lat,lng
-    FROM observation_group
-  "
-  
-  sample <- as.data.frame(dbGetQuery(con,sql)) 
-  save(sample,file="data/sample.Rda")
-}
+if(class(con) != "try-error") {
+  get_data(con)
+
+} 
+
+load("data/likes.Rda")
+load("data/tweets.Rda")
+load("data/sent_tweets.Rda")
+load("data/sample.Rda")
 
 
 
@@ -57,7 +35,7 @@ like_users <- likes %>%
     )
 
 #############################################
-## Get counts of n tweet data fo each user on each day
+## Get counts of n tweet data for each user on each day
 tweet_users <- tweets %>%
   group_by(user_id,tweet_date) %>%
   summarise(
@@ -69,13 +47,17 @@ tweet_users <- tweets %>%
   )
 
 #############################################
-## Get counts of sent tweets at each user on each day
+## Get counts of sent tweets at each user on each day, and show truth value
 sent_tweets$day <- as.character(as.Date(sent_tweets$time_sent))
 sent_tweets_users <- sent_tweets %>%
-  group_by(user,day) %>%
+  group_by(user,day,truth) %>%
   summarise(
     sent_n = length(PID)
   )
+
+
+####################################################################
+## Create a dataframe with a row for each user*day combination
 
 days <- sort(unique(like_users$like_date))
 users <- unique(like_users$user_id)
@@ -85,15 +67,21 @@ date <- rep(days,times=length(users))
 
 user_days <- data.frame(user_id,date)
 
+####################################################################
+## Merge this panel dataset with the others so that we get counts of 
+## each variable for each user on each day, replace NAs (where there)
+## were no tweets or likes recorded with 0s
+
 user_days <- user_days %>%
   left_join(like_users,by=c("date" = "like_date","user_id" = "user_id")) %>%
   left_join(tweet_users,by=c("date" = "tweet_date","user_id" = "user_id")) %>%
   left_join(sample) %>%
   left_join(sent_tweets_users,by=c("date" = "day","username" = "user")) %>%
-  select(user_id,date,username,t_group,like_n:trump_keyword_n,sent_n)
+  select(user_id,date,username,t_group,like_n:trump_keyword_n,sent_n,truth)
 
 
 user_days[is.na(user_days)] <- 0
+
 
 #########################################
 ## Summarise Group Averages
@@ -106,15 +94,13 @@ group_avs <-  user_days %>%
     average_MAGA = mean(MAGA_n),
     average_keywords = mean(trump_keyword_n),
     average_tweets = mean(tweet_n),
-    average_sent = mean(sent_n)
+    average_sent = mean(sent_n),
+    average_truth = sum(truth) / sum(sent_n)
   ) 
-
-group_avs$long_date <- group_avs$date
-group_avs$date <- substr(group_avs$long_date,6,11)
 
 
 ########################
-## Summarise User avs
+## Summarise User avs across days
 user_avs <-  user_days %>% 
   group_by(user_id) %>%
   summarise(
@@ -127,103 +113,69 @@ user_avs <-  user_days %>%
     average_sent = mean(sent_n)
   ) 
 
+#########################################################
+## See functions/plot_tc.R for the function to linegraph
+## T and C groups. To use it we supply the name of the
+## dependent variable as a string as the first arg
+
+
 #####################################
 ## Plot likes
-ggplot(group_avs,
-       aes(date,average_likes,colour=t_group,group=t_group)) +
-  geom_bar(
-    aes(date,average_sent,fill=t_group),
-    alpha = 0.3,
-    stat="identity",
-    show.legend = FALSE
-  ) +
-  geom_line() + 
-  geom_point(shape=4,size=3) +
-  theme_bw()
+plot_tc('average_likes')
 
 #####################################
 ## Plot RTs
-ggplot(group_avs,
-       aes(date,average_rts,colour=t_group,group=t_group)) +
-  geom_bar(
-    aes(date,average_sent,fill=t_group),
-    alpha = 0.3,
-    stat="identity",
-    show.legend = FALSE
-  ) +
-  geom_line() + 
-  geom_point(shape=4,size=3) +
-  theme_bw()
+plot_tc('average_rts')
 
 
 #####################################
 ## Plot mentions
-ggplot(group_avs,
-       aes(date,average_mentions,colour=t_group,group=t_group)) +
-  geom_bar(
-    aes(date,average_sent,fill=t_group),
-    alpha = 0.3,
-    stat="identity",
-    show.legend = FALSE
-  ) +
-  geom_line() + 
-  geom_point(shape=4,size=3) +
-  theme_bw()
+plot_tc('average_mentions')
 
 
 #####################################
 ## Plot Make America Great Again
-ggplot(group_avs,
-       aes(date,average_MAGA,colour=t_group,group=t_group)) +
-  geom_bar(
-    aes(date,average_sent,fill=t_group),
-    alpha = 0.3,
-    stat="identity",
-    show.legend = FALSE
-  ) +
-  geom_line() + 
-  geom_point(shape=4,size=3) +
-  theme_bw()
+plot_tc('average_MAGA')
 
 
 #####################################
 ## Plot Trump search term
-ggplot(group_avs,
-       aes(date,average_keywords,colour=t_group,group=t_group)) +
-  geom_bar(
-    aes(date,average_sent,fill=t_group),
-    alpha = 0.3,
-    stat="identity",
-    show.legend = FALSE
-  ) +
-  geom_line() + 
-  geom_point(shape=4,size=3) +
-  theme_bw()
+plot_tc('average_keywords')
 
 
 #####################################
 ## Plot Total Tweets
-ggplot(group_avs,
-       aes(date,average_tweets,colour=t_group,group=t_group)) +
+plot_tc('average_tweets')
+
+
+#####################################
+## plot all vars on one graph
+
+group_avs_longer <- group_avs %>%
+  gather(variable,value,average_likes:average_truth)
+
+ggplot() +
+  geom_line(
+    data = filter(group_avs_longer,variable!="average_sent" & variable != "average_truth"),
+    aes(date,value,colour=t_group,group=interaction(variable,t_group),linetype=variable)
+            ) +
   geom_bar(
-    aes(date,average_sent,fill=t_group),
-    alpha = 0.3,
+    data=filter(group_avs,t_group=="T"),
+    aes(date,average_sent,fill=average_truth),
+    color='grey',
+    alpha = 1,
     stat="identity",
     show.legend = FALSE
   ) +
-  geom_line() + 
-  geom_point(shape=4,size=3) +
+  scale_fill_gradientn(colours=c("red","white","blue"),values=c(0,0.5,1),
+                       limits=c(-2,2)) +
   theme_bw()
 
-group_avs_longer <- group_avs %>%
-  gather(variable,value,average_likes:average_sent)
 
-ggplot(group_avs_longer,
-       aes(date,value,colour=t_group,group=interaction(variable,t_group))
-       ) +
-  geom_line(aes(linetype=variable)) +
-  theme_bw()
-
+##################################################################
+## Make date_d, the date as a date object, and set treated to 1 if it
+## is past the day when treatment started
+## (Need to revise this part to make it more sophisticated)
 user_days$date_d <- as.Date(user_days$date)
 
 user_days$treated <- ifelse(
@@ -233,8 +185,17 @@ user_days$treated <- ifelse(
   0
 )
 
+
+
+#################################################################
+## Write the panel dataset to a csv file
 write.csv(user_days,file="data/user_days.csv")
 
+
+
+################################################################
+################################################################
+## Try out some models
 p_model <- plm(like_n ~ treated,
                data=user_days,
                index=c("user_id","date"),
