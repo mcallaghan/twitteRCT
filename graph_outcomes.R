@@ -233,6 +233,8 @@ user_days$treated <- ifelse(
   0
 )
 
+write.csv(user_days,file="data/user_days.csv")
+
 p_model <- plm(like_n ~ treated,
                data=user_days,
                index=c("user_id","date"),
@@ -249,6 +251,9 @@ summary(model2)
 
 model_maga <- lm(MAGA_n ~ t_group*date,data=user_days)
 summary(model_maga)
+
+model_keyword <- lm(trump_keyword_n ~ t_group*date,data=user_days)
+summary(model_keyword)
 
 ggplot(user_days,
        aes(date,like_n,colour=t_group)
