@@ -2,7 +2,9 @@
 title: "Preliminary Results"
 author: "Group 1"
 date: "April 25, 2016"
-output: pdf_document
+output:
+  pdf_document:
+    fig_caption: yes
 ---
 
 
@@ -17,59 +19,28 @@ library(dplyr)
 library(tidyr)
 library(plm)
 library(knitr)
+library(R.utils)
+library(stargazer)
 
-con <- try(dbConnect(MySQL(),
-                     group='trump'),
-           silent=TRUE
-           )
+sourceDirectory("functions/",modifiedOnly = FALSE)
 
-if(class(con) == "try-error") {
-  load("data/likes.Rda")
-  load("data/tweets.Rda")
-  load("data/sent_tweets.Rda")
-  load("data/sample.Rda")
-  load("data/sample_info.Rda")
-  load("data/last_download.Rda")
-} else {
-  sql = "SELECT * FROM all_likes
-    WHERE `like_date` > '2016-04-01'
-  "
-  
-  likes <- as.data.frame(dbGetQuery(con,sql)) 
-  save(likes,file="data/likes.Rda")
-  
-  sql = "SELECT * FROM observed_tweets
-    WHERE `tweet_date` > '2016-04-01'
-  "
-  
-  tweets <- as.data.frame(dbGetQuery(con,sql)) 
-  save(tweets,file="data/tweets.Rda")
-  
-  sql = "SELECT * FROM tweets
-    WHERE time_sent > '2016-04-10'
-  "
-  
-  sent_tweets <- as.data.frame(dbGetQuery(con,sql)) 
-  save(sent_tweets,file="data/sent_tweets.Rda")
-  
-  sql = "SELECT user_id,username,t_group
-    FROM observation_group
-  "
-  
-  sample <- as.data.frame(dbGetQuery(con,sql)) 
-  save(sample,file="data/sample.Rda")
-  
-  sql = "SELECT user_id,followers_count,friends_count,location
-    FROM trump_tweeters
-  "
-  
-  sample_info <- as.data.frame(dbGetQuery(con,sql)) 
-  save(sample_info,file="data/sample_info.Rda")
-  
-  now <- Sys.time()
-  save(now,file="data/last_download.Rda")
-  
-}
+# con <- try(dbConnect(MySQL(),
+#                      group='trump'),
+#            silent=TRUE
+#            )
+# 
+# if(class(con) != "try-error") {
+#   get_data(con)
+# 
+# } 
+
+load("data/likes.Rda")
+load("data/tweets.Rda")
+load("data/sent_tweets.Rda")
+load("data/sample.Rda")
+load("data/sample_info.Rda")
+load("data/last_download.Rda")
+ 
 
 
 ```
@@ -78,7 +49,7 @@ if(class(con) == "try-error") {
 
 ```{r process, echo=FALSE,message=FALSE,warning=FALSE}
 
-sample_info <- sample %>%
+sample <- sample %>%
   left_join(sample_info)
 
 #############################################
@@ -90,7 +61,7 @@ like_users <- likes %>%
     )
 
 #############################################
-## Get counts of n tweet data fo each user on each day
+## Get counts of n tweet data for each user on each day
 tweet_users <- tweets %>%
   group_by(user_id,tweet_date) %>%
   summarise(
@@ -102,13 +73,17 @@ tweet_users <- tweets %>%
   )
 
 #############################################
-## Get counts of sent tweets at each user on each day
+## Get counts of sent tweets at each user on each day, and show truth value
 sent_tweets$day <- as.character(as.Date(sent_tweets$time_sent))
 sent_tweets_users <- sent_tweets %>%
-  group_by(user,day) %>%
+  group_by(user,day,truth) %>%
   summarise(
     sent_n = length(PID)
   )
+
+
+####################################################################
+## Create a dataframe with a row for each user*day combination
 
 days <- sort(unique(like_users$like_date))
 users <- unique(like_users$user_id)
@@ -118,15 +93,25 @@ date <- rep(days,times=length(users))
 
 user_days <- data.frame(user_id,date)
 
+####################################################################
+## Merge this panel dataset with the others so that we get counts of 
+## each variable for each user on each day, replace NAs (where there)
+## were no tweets or likes recorded with 0s
+
 user_days <- user_days %>%
   left_join(like_users,by=c("date" = "like_date","user_id" = "user_id")) %>%
   left_join(tweet_users,by=c("date" = "tweet_date","user_id" = "user_id")) %>%
-  right_join(sample) %>%
+  left_join(sample) %>%
   left_join(sent_tweets_users,by=c("date" = "day","username" = "user")) %>%
-  select(user_id,date,username,t_group,like_n:trump_keyword_n,sent_n)
+  select(user_id,date,username,t_group,like_n:trump_keyword_n,sent_n,truth,location:friends_count)
 
 
 user_days[is.na(user_days)] <- 0
+
+user_days$date_d <- as.Date(user_days$date)
+
+
+
 
 #########################################
 ## Summarise Group Averages
@@ -139,10 +124,15 @@ group_avs <-  user_days %>%
     average_MAGA = mean(MAGA_n),
     average_keywords = mean(trump_keyword_n),
     average_tweets = mean(tweet_n),
-    average_sent = mean(sent_n)
+    average_sent = mean(sent_n),
+    average_truth = sum(truth) / sum(sent_n)
   ) 
 
+
+########################
+## Summarise User avs across days
 user_avs <-  user_days %>% 
+  filter(date_d < as.Date("2016-04-14")) %>%
   group_by(user_id) %>%
   summarise(
     average_likes = mean(like_n),
@@ -155,35 +145,36 @@ user_avs <-  user_days %>%
   ) 
 
 
-
 ```
 
 The data in this document were pulled from a database on `r format(now,"%B %d %Y")` at `r format(now,"%H:%M")`. As like and tweet data is collected on a rolling basis, not all likes and tweets made up to that time are included.
 
 ## Descriptive Statistics
 
+We show summary statistics for the treatment and control groups in the period before the treatment started, and plot frequency density plots of followers and friends counts.
+
 ```{r descristive, echo=FALSE,message=FALSE,warning=FALSE}
 
 user_avs_long <- user_avs %>%
-  left_join(sample_info) %>%
+  left_join(sample) %>%
   select(user_id,username,t_group,location,average_likes:average_keywords,followers_count,friends_count) %>%
   gather(variable,value,average_likes:friends_count) 
 
 user_avs_summary <- user_avs_long %>%
   group_by(variable) %>%
   summarise(
-    mean = mean(value),
-    minimum = min(value),
-    maximum = max(value)
+    mean = mean(value,na.rm=TRUE),
+    median = median(value,na.rm=TRUE),
+    SE = sd(value,na.rm=TRUE)/sqrt(length(value))
   ) %>%
   ungroup()
 
 user_avs_summary_split <- user_avs_long %>%
   group_by(variable,t_group) %>%
   summarise(
-    mean = mean(value),
-    minimum = min(value),
-    maximum = max(value)
+    mean = mean(value,na.rm=TRUE),
+    median = median(value,na.rm=TRUE),
+    SE = sd(value,na.rm=TRUE)/sqrt(length(value))
   ) %>%
   ungroup()
 
@@ -195,43 +186,119 @@ control <- user_avs_summary_split  %>%
   filter(t_group == "C") %>%
   select(-t_group)
 
-#kable(treatment)
+kable(treatment,caption="Summary statistics - treatment group")
 
-#kable(control)
-
-kable(user_avs_summary)
+kable(control,caption="Summary statistics - control group")
 
 
+#############################################
+## Plot followers count
 
-hist(user_avs$average_likes,breaks=seq(0,max(user_avs$average_likes)+1,0.5))
+followers <- ggplot(
+  sample,
+  aes(followers_count,..density..,colour=t_group)
+  ) + 
+  geom_freqpoly() +
+  theme_bw()
 
-#hist(user_avs$average_tweets,breaks=seq(0,max(user_avs$average_tweets)+1,0.5))
+#############################################
+## Plot friends count
 
-#hist(user_avs$average_mentions,breaks=seq(0,max(user_avs$average_mentions)+1,0.5))
+friends <- ggplot(
+  sample,
+  aes(friends_count,..density..,colour=t_group)
+) + 
+  geom_freqpoly() +
+  theme_bw()
+
+############################################
+## Be careful with the Rmisc package, it hides
+## the summarise function from dplyr - don't
+## load it in library
+Rmisc::multiplot(followers,friends)
+
+
 
 ```
 
-We measure likes of trump tweets on each day, compare treatment and control groups, and show the fraction of the treatment group receiving treatment on each day.
+
+## Results
+
+We measure likes of trump tweets on each day, compare treatment and control groups, and show the fraction of the treatment group receiving treatment on each day with colour coded bars. The truth values of the bars are colour coded according to the following schema
+
+
+| Truth         | Truth value   |
+| ------------- |:-------------:|
+| True          | 2             |
+| Mostly true   | 1             |
+| Half true     | 0             |
+| Mostly false  | -1            |
+| False         | -2            |
 
 ```{r likes, echo=FALSE,message=FALSE,warning=FALSE}
 
 #####################################
 ## Plot likes
-ggplot(group_avs,
-       aes(date,average_likes,colour=t_group,group=t_group)) +
-  geom_bar(
-    aes(date,average_sent,fill=t_group),
-    alpha = 0.3,
-    stat="identity",
-    show.legend = FALSE
-  ) +
-  geom_line() + 
-  geom_point(shape=4,size=3) +
-  theme_bw() + 
-  theme(
-    axis.text.x = element_text(angle=90,hjust = 1,vjust = 0.5)
-  )
+plot_tc('average_likes')
 
 ```
 
+
+We also collect all tweets sent by each member of our observation group (removing those which are a retweet or a reply to one of our accounts). We categorise those tweets to measure various indicators of engagement with Trump. These are shown below.
+
+```{r rts, echo=FALSE,message=FALSE,warning=FALSE, fig.cap="Average retweets of Trump"}
+
+
+plot_tc('average_rts')
+
+```
+
+
+```{r mentions, echo=FALSE,message=FALSE,warning=FALSE, fig.cap="Averages tweets containing @RealDonaldTrump"}
+
+plot_tc('average_mentions')
+
+```
+
+
+
+```{r MAGA, echo=FALSE,message=FALSE,warning=FALSE, fig.cap="Average tweets using the hashtag #MakeAmericaGreatAgain"}
+
+plot_tc('average_MAGA')
+
+```
+
+
+```{r keywords, echo=FALSE,message=FALSE,warning=FALSE, fig.cap="Average tweets containing the word Trump"}
+
+plot_tc('average_keywords')
+
+```
+
+
+```{r tweets, echo=FALSE,message=FALSE,warning=FALSE, fig.cap="Average tweets"}
+
+plot_tc('average_tweets')
+
+```
+
+
+### Numerical results
+
+We have run simple regressions interacting the time variable and the treatment variable, to see if the differences between T and C groups on each day were significant.
+
+```{r models, echo=FALSE,message=FALSE,warning=FALSE,results="asis"}
+
+model_likes <- lm(like_n ~ t_group*date,data=user_days)
+
+model_rts <- lm(trump_rt_n ~ t_group*date,data=user_days)
+
+model_maga <- lm(MAGA_n ~ t_group*date,data=user_days)
+
+model_keyword <- lm(trump_keyword_n ~ t_group*date,data=user_days)
+
+stargazer(model_likes,model_rts,model_maga,model_keyword,omit="^date",single.row=TRUE,header=FALSE)
+
+
+```
 

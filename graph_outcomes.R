@@ -5,6 +5,7 @@ library(tidyr)
 library(plm)
 library(R.utils)
 
+
 sourceDirectory("functions/",modifiedOnly = FALSE)
 
 
@@ -22,8 +23,46 @@ load("data/likes.Rda")
 load("data/tweets.Rda")
 load("data/sent_tweets.Rda")
 load("data/sample.Rda")
+load("data/sample_info.Rda")
+load("data/last_download.Rda")
 
 
+
+#############################################
+## Sort info about sample likes and followers
+sample <- sample %>%
+  left_join(sample_info)
+
+
+#############################################
+## Some basic descriptive statistics about the 
+## sample
+
+#############################################
+## Plot followers count
+
+followers <- ggplot(
+  sample,
+  aes(followers_count,..density..,colour=t_group)
+  ) + 
+  geom_freqpoly() +
+  theme_bw()
+
+#############################################
+## Plot friends count
+
+friends <- ggplot(
+  sample,
+  aes(friends_count,..density..,colour=t_group)
+) + 
+  geom_freqpoly() +
+  theme_bw()
+
+############################################
+## Be careful with the Rmisc package, it hides
+## the summarise function from dplyr - don't
+## load it in library
+Rmisc::multiplot(followers,friends)
 
 
 #############################################
@@ -77,7 +116,7 @@ user_days <- user_days %>%
   left_join(tweet_users,by=c("date" = "tweet_date","user_id" = "user_id")) %>%
   left_join(sample) %>%
   left_join(sent_tweets_users,by=c("date" = "day","username" = "user")) %>%
-  select(user_id,date,username,t_group,like_n:trump_keyword_n,sent_n,truth)
+  select(user_id,date,username,t_group,like_n:trump_keyword_n,sent_n,truth,location:friends_count)
 
 
 user_days[is.na(user_days)] <- 0
@@ -190,6 +229,7 @@ user_days$treated <- ifelse(
 #################################################################
 ## Write the panel dataset to a csv file
 write.csv(user_days,file="data/user_days.csv")
+write.csv(sample,file="data/sample_info.csv")
 
 
 

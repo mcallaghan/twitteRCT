@@ -27,4 +27,14 @@ get_data <- function(con) {
   
   sample <- as.data.frame(dbGetQuery(con,sql)) 
   save(sample,file="data/sample.Rda")
+  
+  sql = "SELECT user_id,followers_count,friends_count,location
+    FROM trump_tweeters
+  "
+  
+  sample_info <- as.data.frame(dbGetQuery(con,sql)) 
+  save(sample_info,file="data/sample_info.Rda")
+  
+  now <- Sys.time()
+  save(now,file="data/last_download.Rda")
 }
