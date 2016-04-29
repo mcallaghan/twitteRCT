@@ -21,18 +21,19 @@ library(plm)
 library(knitr)
 library(R.utils)
 library(stargazer)
+library(xtable)
 
 sourceDirectory("functions/",modifiedOnly = FALSE)
 
-# con <- try(dbConnect(MySQL(),
-#                      group='trump'),
-#            silent=TRUE
-#            )
-# 
-# if(class(con) != "try-error") {
-#   get_data(con)
-# 
-# } 
+con <- try(dbConnect(MySQL(),
+                     group='trump'),
+           silent=TRUE
+           )
+
+if(class(con) != "try-error") {
+  get_data(con)
+
+} 
 
 load("data/likes.Rda")
 load("data/tweets.Rda")
@@ -148,7 +149,7 @@ user_avs <-  user_days %>%
 
 ```
 
-The data in this document were pulled from a database on April 28 2016 at `r format(now,"%H:%M")`. As like and tweet data is collected on a rolling basis, not all likes and tweets made up to that time are included.
+The data in this document were pulled from a database on `r format(now,"%B %d %Y")` at `r format(now,"%H:%M")`. As like and tweet data is collected on a rolling basis, not all likes and tweets made up to that time are included.
 
 ## Descriptive Statistics
 
@@ -219,6 +220,37 @@ friends <- ggplot(
 Rmisc::multiplot(followers,friends)
 
 
+
+```
+
+## Treatment
+
+We sent the following tweets to our treatment group
+
+```{r example_tweets, echo=FALSE, message=FALSE,results="asis"}
+
+tweet_examples <- sent_tweets %>%
+  group_by(tweet_no) %>%
+  arrange(PID) %>%
+  filter(row_number()==1) %>%
+  select(text,truth,day) %>%
+  rename(`start date` = day)
+
+print(xtable(
+  tweet_examples,
+  align=c(
+    "c",
+    "c",
+    "p{8cm}",
+    "c",
+    "c"),
+  caption="Example tweets",
+  label="table:example_tweets",
+  table.placement="!h"
+  ),
+  include.rownames=FALSE,
+  comment=FALSE
+      )
 
 ```
 

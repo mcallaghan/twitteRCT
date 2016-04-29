@@ -1,0 +1,42 @@
+---
+title: "tablerrrr"
+author: "Max Callaghan"
+date: "April 29, 2016"
+output: pdf_document
+---
+
+```{r example_tweets, echo=FALSE, message=FALSE,results="asis"}
+
+library(dplyr)
+library(xtable)
+
+load("data/sent_tweets.Rda")
+
+sent_tweets$day <- as.character(as.Date(sent_tweets$time_sent))
+
+tweet_examples <- sent_tweets %>%
+  group_by(tweet_no) %>%
+  arrange(PID) %>%
+  filter(row_number()==1) %>%
+  select(text,truth,day) %>%
+  rename(`start date` = day)
+
+#options(xtable.sanitize.text.function=identity)
+
+print(xtable(
+  tweet_examples,
+  align=c(
+    "c",
+    "c",
+    "p{8cm}",
+    "c",
+    "c"),
+  caption="Example tweets",
+  label="table:example_tweets",
+  table.placement="!h"
+  ),
+  include.rownames=FALSE,
+  comment=FALSE
+      )
+
+```
