@@ -1,6 +1,6 @@
 ---
 title: "Preliminary Results"
-author: "Group 1"
+author: "Group 3"
 date: "April 25, 2016"
 output:
   pdf_document:
@@ -144,10 +144,11 @@ user_avs <-  user_days %>%
     average_sent = mean(sent_n)
   ) 
 
+#format(now,"%B %d %Y")
 
 ```
 
-The data in this document were pulled from a database on `r format(now,"%B %d %Y")` at `r format(now,"%H:%M")`. As like and tweet data is collected on a rolling basis, not all likes and tweets made up to that time are included.
+The data in this document were pulled from a database on April 28 2016 at `r format(now,"%H:%M")`. As like and tweet data is collected on a rolling basis, not all likes and tweets made up to that time are included.
 
 ## Descriptive Statistics
 
