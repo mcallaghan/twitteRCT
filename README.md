@@ -1,6 +1,6 @@
 # twitteRCT
 
-This repository contains data and analysis of a project to conduct a randomised control trial using Twitter. We send thousands of tweets to Twitter users who have liked tweets created by Donald Trump containing judgements from politifact.org about statements that Trump made.
+This repository contains data and analysis of a project to conduct a randomised control trial using Twitter. We send thousands of tweets containing judgements from politifact.org about statements that Trump made to Twitter users who have liked tweets created by Donald Trump.
 
 We observe whether this new information about Donald Trump changes the way users interact with the candidate on Twitter by comparing the frequency of likes and retweets of Trump's posts in treatment and control groups.
 
