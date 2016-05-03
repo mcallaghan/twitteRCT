@@ -25,15 +25,15 @@ library(xtable)
 
 sourceDirectory("functions/",modifiedOnly = FALSE)
 
-con <- try(dbConnect(MySQL(),
-                     group='trump'),
-           silent=TRUE
-           )
-
-if(class(con) != "try-error") {
-  get_data(con)
-
-} 
+# con <- try(dbConnect(MySQL(),
+#                      group='trump'),
+#            silent=TRUE
+#            )
+# 
+# if(class(con) != "try-error") {
+#   get_data(con)
+# 
+# } 
 
 load("data/likes.Rda")
 load("data/tweets.Rda")
@@ -268,11 +268,12 @@ We measure likes of trump tweets on each day, compare treatment and control grou
 | Mostly false  | -1            |
 | False         | -2            |
 
-```{r likes, echo=FALSE,message=FALSE,warning=FALSE}
+```{r likes, echo=FALSE,message=FALSE,warning=FALSE,fig.cap="Average likes of Trump tweets"}
 
 #####################################
 ## Plot likes
-plot_tc('average_likes')
+plot_tc('average_likes') +
+  labs(y="Average Likes")
 
 ```
 
