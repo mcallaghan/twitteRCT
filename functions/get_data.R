@@ -1,13 +1,13 @@
 get_data <- function(con) {
   sql = "SELECT * FROM all_likes
-    WHERE `like_date` > '2016-04-01'
+    WHERE `like_date` > '2016-04-06'
   "
   
   likes <- as.data.frame(dbGetQuery(con,sql)) 
   save(likes,file="data/likes.Rda")
   
   sql = "SELECT * FROM observed_tweets
-  WHERE `tweet_date` > '2016-04-01'
+  WHERE `tweet_date` > '2016-04-06'
   AND reply = 0
   "
   

@@ -22,6 +22,9 @@ library(knitr)
 library(R.utils)
 library(stargazer)
 library(xtable)
+library(ggmap)
+
+opts_chunk$set(fig.height=8,fig.width=8,warning=FALSE,echo=FALSE,message=FALSE)
 
 sourceDirectory("functions/",modifiedOnly = FALSE)
 
@@ -41,6 +44,8 @@ load("data/sent_tweets.Rda")
 load("data/sample.Rda")
 load("data/sample_info.Rda")
 load("data/last_download.Rda")
+
+load("data/usa_map.Rdata")
  
 
 
@@ -223,9 +228,28 @@ Rmisc::multiplot(followers,friends)
 
 ```
 
+The map in figure [#] shows the distribution of the self-reported location of our observation group around the US (note that not all users report their location, not all users truthfully report their location, and not all locations are necessarily geocoded correctly)
+
+```{r map, echo=FALSE, message=FALSE,fig.cap="Location of observation group"}
+
+
+
+geo_sample <- sample %>%
+  filter(lat > 0)
+
+ggmap(map) +
+  geom_jitter(
+    aes(x=lng,y=lat,colour=t_group),
+    size=0.5,
+    data=geo_sample
+  ) + theme_void()
+
+```
+
+
 ## Treatment
 
-We sent the following tweets to our treatment group
+Table [#] gives examples of the tweets we sent to our treatment group
 
 ```{r example_tweets, echo=FALSE, message=FALSE,results="asis"}
 
@@ -234,10 +258,24 @@ tweet_examples <- sent_tweets %>%
   arrange(PID) %>%
   filter(row_number()==1) %>%
   select(text,truth,day) %>%
-  rename(`start date` = day)
+  rename(`start date` = day) %>%
+  mutate(
+    tlength = nchar(text),
+    nspaces = length(strsplit(text," ")[[1]]),
+    nmid = nspaces/2,
+    nmid1 = nmid + 1,
+    w1 = paste(strsplit(text," ")[[1]][1:nmid],collapse=" "),
+    w2 = paste(strsplit(text," ")[[1]][nmid1:nspaces],collapse=" "),
+    broken_text = paste(w1,w2,sep="\n"),
+    start_date_adj = ifelse(
+      `start date` == "2016-04-30",
+      "2016-05-01",
+      `start date`
+    )
+  )
 
 print(xtable(
-  tweet_examples,
+  select(tweet_examples,text,truth,`start date`),
   align=c(
     "c",
     "c",
@@ -257,7 +295,7 @@ print(xtable(
 
 ## Results
 
-We measure likes of trump tweets on each day, compare treatment and control groups, and show the fraction of the treatment group receiving treatment on each day with colour coded bars. The truth values of the bars are colour coded according to the following schema
+We measure likes of trump tweets on each day, compare treatment and control groups, and show the fraction of the treatment group receiving treatment on each day with colour coded bars. The truth values of the bars are colour coded according to the schema in table [#]
 
 
 | Truth         | Truth value   |
@@ -268,29 +306,30 @@ We measure likes of trump tweets on each day, compare treatment and control grou
 | Mostly false  | -1            |
 | False         | -2            |
 
+\newpage
+
 ```{r likes, echo=FALSE,message=FALSE,warning=FALSE,fig.cap="Average likes of Trump tweets"}
 
 #####################################
 ## Plot likes
-plot_tc('average_likes') +
-  labs(y="Average Likes")
+plot_tc('average_likes',t=0.6) 
 
 ```
 
 
-We also collect all tweets sent by each member of our observation group (removing those which are a retweet or a reply to one of our accounts). We categorise those tweets to measure various indicators of engagement with Trump. These are shown below.
+We also collect all tweets sent by each member of our observation group (removing those which are a retweet or a reply to one of our accounts). We categorise those tweets to measure various indicators of engagement with Trump. These are shown in figures [#] to [#]
 
 ```{r rts, echo=FALSE,message=FALSE,warning=FALSE, fig.cap="Average retweets of Trump"}
 
 
-plot_tc('average_rts')
+plot_tc('average_rts',t=0.6)
 
 ```
 
 
 ```{r mentions, echo=FALSE,message=FALSE,warning=FALSE, fig.cap="Averages tweets containing @RealDonaldTrump"}
 
-plot_tc('average_mentions')
+plot_tc('average_mentions',t=0.6)
 
 ```
 
@@ -298,21 +337,21 @@ plot_tc('average_mentions')
 
 ```{r MAGA, echo=FALSE,message=FALSE,warning=FALSE, fig.cap="Average tweets using the hashtag #MakeAmericaGreatAgain"}
 
-plot_tc('average_MAGA')
+plot_tc('average_MAGA',t=0.6)
 
 ```
 
 
 ```{r keywords, echo=FALSE,message=FALSE,warning=FALSE, fig.cap="Average tweets containing the word Trump"}
 
-plot_tc('average_keywords')
+plot_tc('average_keywords',t=0.6)
 
 ```
 
 
 ```{r tweets, echo=FALSE,message=FALSE,warning=FALSE, fig.cap="Average tweets"}
 
-plot_tc('average_tweets')
+plot_tc('average_tweets',t=0.6)
 
 ```
 

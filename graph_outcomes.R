@@ -138,19 +138,27 @@ group_avs <-  user_days %>%
   ) 
 
 
-########################
-## Summarise User avs across days
-user_avs <-  user_days %>% 
-  group_by(user_id) %>%
-  summarise(
-    average_likes = mean(like_n),
-    average_rts = mean(trump_rt_n),
-    average_mentions = mean(trump_mention_n),
-    average_MAGA = mean(MAGA_n),
-    average_keywords = mean(trump_keyword_n),
-    average_tweets = mean(tweet_n),
-    average_sent = mean(sent_n)
-  ) 
+tweet_examples <- sent_tweets %>%
+  group_by(tweet_no) %>%
+  arrange(PID) %>%
+  filter(row_number()==1) %>%
+  select(text,truth,day) %>%
+  rename(`start date` = day) %>%
+  mutate(
+    tlength = nchar(text),
+    nspaces = length(strsplit(text," ")[[1]]),
+    nmid = nspaces/2,
+    nmid1 = nmid + 1,
+    w1 = paste(strsplit(text," ")[[1]][1:nmid],collapse=" "),
+    w2 = paste(strsplit(text," ")[[1]][nmid1:nspaces],collapse=" "),
+    broken_text = paste(w1,w2,sep="\n"),
+    start_date_adj = ifelse(
+      `start date` == "2016-04-30",
+      "2016-05-01",
+      `start date`
+    )
+  )
+
 
 #########################################################
 ## See functions/plot_tc.R for the function to linegraph
@@ -160,7 +168,8 @@ user_avs <-  user_days %>%
 
 #####################################
 ## Plot likes
-plot_tc('average_likes')
+plot_tc('average_likes',t=0.6) 
+
 
 #####################################
 ## Plot RTs
@@ -266,6 +275,7 @@ geo_sample <- sample %>%
 
 library(ggmap)
 map <- get_map(location='united states',zoom=3,source="stamen",maptype="toner")
+save(map,file="data/usa_map.Rdata")
 
 # map <- get_openstreetmap(
 #   bbox = c(left=-90,
