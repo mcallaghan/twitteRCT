@@ -40,21 +40,13 @@ tweet_days <- tweet_examples %>%
 tweet_days <- rbind(tweet_days,mutate(tweet_days,ys=0.4,day=rev(day)))
 
 
-p <- ggplot() +
+ggplot() +
   geom_line(
     data=group_avs,
     aes_string('day',yvar,colour='t_group',group='t_group')
   ) +
-  geom_polygon(
-    data=tweet_days,
-    aes(x=day,y=ys,group=tweet_no,width=15),
-    #size=1,
-    alpha=0.8
-  ) + 
-  scale_x_continuous(breaks=seq(1,i,by=1)) +
-  theme_bw() 
-
-p
+  theme_bw() +
+  labs(x="Avg. Likes", y="Day")
 
 
 

@@ -45,7 +45,7 @@ print(xtable(
   align=c(
     "c",
     "c",
-    "p{8cm}",
+    "p{6cm}",
     "c",
     "c"),
   caption="Example tweets",
