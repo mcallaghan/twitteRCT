@@ -72,6 +72,7 @@ ggplot(data=likes) +
   labs(x="Day", y="Avg. Likes") +
   theme_bw() +
 ggsave("plots/likes.png",width=w,height=h,dpi=500)
+ggsave("plots/likes.jpg",width=w,height=h,dpi=500)
 
 
 ggplot(data=maga) +
@@ -92,6 +93,7 @@ ggplot(data=maga) +
   scale_colour_discrete(guide = guide_legend(title = "Treatment\nGroup")) +
   labs(x="Day", y="Avg. #MakeAmericaGreatAgain") +
   theme_bw() 
-ggsave("plots/maga.png",width=w,height=h)
+ggsave("plots/maga.png",width=w,height=h,dpi=500)
+ggsave("plots/maga.jpg",width=w,height=h,dpi=500)
 
 
