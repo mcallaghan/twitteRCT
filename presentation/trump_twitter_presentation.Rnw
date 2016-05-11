@@ -1,4 +1,4 @@
-\documentclass{beamer}
+\documentclass[10pt]{beamer}
 \mode<presentation>
 {
   \usetheme{Madrid}      % or try Darmstadt, Madrid, Warsaw, ...
@@ -134,17 +134,53 @@ load("../data/like_n.Rdata")
 %-----------------------------------------------%
 
 
+\begin{frame}{Descriptive Statistics}
 
-\section{Main Results: Data and Dependent Variables}
-\begin{frame}{Results}
-short detour on the data we collected throughout the entire time frame (specify time frame) → maybe we don’t actually need that on the slide, but just explain it. \textit{dependent variables (all per individual per day):}
+\begin{figure}
+\includegraphics[width=11cm]{../plots/hists.png}
+\end{figure}
+
+\end{frame}
+
+
+\section{Results}
+\begin{frame}{Results: Data and Dependent Variables}
+From the like and tweet data we collected, we used the following as dependent variables (all per user per day) - tweet data excludes replies to our tweets
 
 \begin{itemize}
 \item number of likes of tweets by Donald Trump
 \item number of retweets of tweets by Donald Trump
-\item number of tweets using the hashtag \textbf{\#MakeAmericaGreatAgain}
-\item number of tweets including the key word \textsc{Trump} 
+\item number of tweets using the hashtag ``\#MakeAmericaGreatAgain''
+\item number of tweets including the key word ``Trump''
 \end{itemize} 
+\end{frame}
+
+
+\begin{frame}{Results: Difference in Means}
+
+\begin{figure}
+\includegraphics[width=9cm]{../plots/mean_bars.png}
+\label{fig:mean_bars}
+\caption{Per user per day means of each dependent variable in treatment and control groups during the treatment period}
+\end{figure}
+
+\end{frame}
+
+
+\begin{frame}{Results: Difference in Means}
+
+\small
+\input{../tables/mean_t_tests.tex}
+
+\end{frame}
+
+\begin{frame}{Results: Fixed Effects Model}
+
+{\tiny
+\input{../tables/fe_results.tex}
+}
+
+
 \end{frame}
 
 

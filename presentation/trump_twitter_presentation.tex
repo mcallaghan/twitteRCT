@@ -1,7 +1,4 @@
-\documentclass{beamer}
-
-\usepackage[]{graphicx}
-\usepackage[]{color}
+\documentclass[10pt]{beamer}\usepackage[]{graphicx}\usepackage[]{color}
 %% maxwidth is the original width if it is less than linewidth
 %% otherwise use linewidth (to make sure the graphics do not exceed the margin)
 \makeatletter
@@ -204,8 +201,8 @@ From the like and tweet data we collected, we used the following as dependent va
 \end{itemize} 
 \end{frame}
 
-\section{Results}
-\begin{frame}{Results: Data and Dependent Variables}
+
+\begin{frame}{Results: Difference in Means}
 
 \begin{figure}
 \includegraphics[width=9cm]{../plots/mean_bars.png}
@@ -213,7 +210,21 @@ From the like and tweet data we collected, we used the following as dependent va
 \caption{Per user per day means of each dependent variable in treatment and control groups during the treatment period}
 \end{figure}
 
+\end{frame}
 
+
+\begin{frame}{Results: Difference in Means}
+
+\small
+\input{../tables/mean_t_tests.tex}
+
+\end{frame}
+
+\begin{frame}{Results: Fixed Effects Model}
+
+{\tiny
+\input{../tables/fe_results.tex}
+}
 
 
 \end{frame}

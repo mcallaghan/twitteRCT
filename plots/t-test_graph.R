@@ -33,7 +33,7 @@ treatment_period <- user_days %>%
 treatment_period_narrow <- treatment_period %>%
   gather(var,value,`Avg likes`:`Avg tweet "Trump"`, -tweet_n) 
 
-
+averages <- data.frame(variable=unique(treatment_period_narrow$var))
 
 for (y in unique(treatment_period_narrow$var)) {
   print(y)
@@ -43,9 +43,39 @@ for (y in unique(treatment_period_narrow$var)) {
   )
   t
   print(test)
+  averages[averages$variable==y,"control mean"] <- test$estimate[[2]]
+  averages[averages$variable==y,"treatment mean"] <- test$estimate[[1]]
+  averages[averages$variable==y,"p-value"] <- test$p.value
 }
 
-treatment_period_summary <- treatment_period %>%
+averages$`p-value` <- 
+  ifelse(
+    averages$`p-value` > 0.01,
+    ifelse(
+      averages$`p-value` > 0.05,
+      ifelse(
+        averages$`p-value` > 0.1,
+        round(averages$`p-value`,2),
+        paste0(round(averages$`p-value`,2)," *")
+      ),
+      paste0(round(averages$`p-value`,2)," **")
+      ),
+    paste0(round(averages$`p-value`,2), "***")
+  )
+    
+
+print(
+  xtable(
+    averages,
+    caption="A t-test on the difference in means between treatment and control groups",
+    label="table:diff_means"
+    ),
+  file="tables/mean_t_tests.tex",
+  include.rownames = FALSE
+)
+
+
+treatment_period_summary <- treatment_period_narrow %>%
   group_by(t_group,var) %>%
   summarise(
     mean = mean(value),
