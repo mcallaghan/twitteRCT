@@ -1,6 +1,7 @@
-\beamer@endinputifotherversion {3.36pt}
+\beamer@endinputifotherversion {3.24pt}
 \select@language {english}
-\beamer@sectionintoc {1}{Implementing the RCT}{3}{0}{1}
-\beamer@sectionintoc {2}{Some Descriptives}{7}{0}{2}
-\beamer@sectionintoc {3}{Main Results: Data and Dependent Variables}{10}{0}{3}
-\beamer@sectionintoc {4}{Limitations}{12}{0}{4}
+\beamer@sectionintoc {1}{Implementation}{3}{0}{1}
+\beamer@sectionintoc {2}{Descriptive Statistics}{8}{0}{2}
+\beamer@sectionintoc {3}{Results}{11}{0}{3}
+\beamer@sectionintoc {4}{Results}{13}{0}{4}
+\beamer@sectionintoc {5}{Limitations}{15}{0}{5}

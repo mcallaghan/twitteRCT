@@ -1,4 +1,56 @@
 \documentclass{beamer}
+
+\usepackage[]{graphicx}
+\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
 \mode<presentation>
 {
   \usetheme{Madrid}      % or try Darmstadt, Madrid, Warsaw, ...
@@ -25,6 +77,7 @@
 \usepackage[utf8x]{inputenc}
 \usepackage{xcolor}
 \usepackage{listings}
+\usepackage[group-separator={,}]{siunitx}
 \lstset
 {
     language=[LaTeX]TeX,
@@ -36,9 +89,9 @@
     identifierstyle=\color{magenta},
 }
 
-\title[RCT Finding]{Speaking Truth to Twitter}
+\title[RCT Findings]{Speaking Truth to Twitter}
 \author{Team 3}
-\institute{Hertie School of Governance}
+\institute[HSOG]{Hertie School of Governance}
 \date{May 12, 2016}
 
 \AtBeginSection[]
@@ -48,7 +101,7 @@
     \tableofcontents[currentsection,currentsubsection]
   \end{frame}
 }
-
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \begin{document}
 
 \begin{frame}
@@ -60,22 +113,27 @@
 \end{frame}
 
 
+
+
+
 %----------Beginning of Slides----------%
 
-\section{Implementing the RCT}
+\section{Implementation}
 \begin{frame} {Main changes}
 	\begin{itemize}
-	\item focus exclusively on Trump (not Clinton and Trump) 
-	\item Sample:treatment group:1000, control group: 4420 
-	\item 10 individuals asked to be withdrawn during treatment. Effect measured thus ITT effect
+	\item We only focussed on Trump, not Clinton
+	\item Our sample was drawn from unconnected accounts which had recently liked a Trump tweet (4420)
+	\item We randomly assigned 1000 accounts to our treatment group and 3420 to our control group
 	\end{itemize}
 \end{frame}
 
 \begin{frame}{Implementation}
 	\begin{itemize}
-	\item creation of 5 Twitter accounts with same 		profile picture and information but different names (\textbf{A, B, C, D, E}) 
-	\item regular creation of Twitter Apps which were used to automatically tweet the treamtment groups
-	\item tweets were sent time frame
+	\item We created \num{5} similar Twitter accounts % with same 	profile picture and information but different names 
+	(\textbf{@twi\_truth, @truth\_to\_twitt, @truthToTwitt, @SpeakingTw, @facts\_for\_twitt}) - see figure  \ref{fig:twit_prof}
+	\item We regularly created Twitter Apps for each account. Robots used these to automatically tweet the treatment groups
+	\item We sent nearly \num{7000} tweets over \num{19} days (see table \ref{table:example_tweets})
+	\item Our server automatically monitored our observation group, recording \num{1475347} tweets and \num{170516} likes
 	\end{itemize}
 \end{frame}
 
@@ -83,19 +141,19 @@
 		\begin{figure}
 			\begin{centering}
   	\includegraphics[scale=.45]{twitter_page.PNG}
-  \caption{Twitter profile}
+  \caption{Example Twitter profile}
+  \label{fig:twit_prof}
 			\end{centering}
 		\end{figure}
 \end{frame}
 
 
-
-\section{Some Descriptives}
-\begin{frame}{Descriptives}
+\begin{frame}{Implementation}
 \begin{table}
 		\begin{center}
-	\tiny
+	{\raggedleft\tiny
 	\input{../tables/sent_tweets.tex}
+	}
 	\end{center}
 \end{table}	
 
@@ -104,31 +162,60 @@
 %\item some information on the level of (unexpected) engagement of our treatment group with us (number of retweets and likes of our tweets, number of followers, number and examples of replies to our tweets)
 \end{frame}
 
-\begin{frame}{Descriptives}
-	Information on our sample: table comparing the treatment and the control group containing for example the following things:
+
+\section{Descriptive Statistics}
+\begin{frame}{Descriptive Statistics}
 
 
-	\begin{itemize}
-\item size of both groups (n)
-\item twitter activity (likes\_n, tweets\_n) before the experiment
-\item number of friends and/or followers
-\item male/female (do we have that information?)
-	\end{itemize}
+\begin{figure}
+\includegraphics[width=10cm]{../tables/descriptive.png}
+\end{figure}
+
+% 	Information on our sample: table comparing the treatment and the control group containing for example the following things:
+% 
+% 	\begin{itemize}
+% \item size of both groups (n)
+% \item twitter activity (likes\_n, tweets\_n) before the experiment
+% \item number of friends and/or followers
+% \item male/female (do we have that information?)
+% 	\end{itemize}
 \end{frame}
 %-----------------------------------------------%
 
 
+\begin{frame}{Descriptive Statistics}
 
-\section{Main Results: Data and Dependent Variables}
-\begin{frame}{Results}
-short detour on the data we collected throughout the entire time frame (specify time frame) → maybe we don’t actually need that on the slide, but just explain it. \textit{dependent variables (all per individual per day):}
+\begin{figure}
+\includegraphics[width=11cm]{../plots/hists.png}
+\end{figure}
+
+\end{frame}
+
+
+\section{Results}
+\begin{frame}{Results: Data and Dependent Variables}
+From the like and tweet data we collected, we used the following as dependent variables (all per user per day) - tweet data excludes replies to our tweets
 
 \begin{itemize}
 \item number of likes of tweets by Donald Trump
 \item number of retweets of tweets by Donald Trump
-\item number of tweets using the hashtag \textbf{\#MakeAmericaGreatAgain}
-\item number of tweets including the key word \textsc{Trump} 
+\item number of tweets using the hashtag ``\#MakeAmericaGreatAgain''
+\item number of tweets including the key word ``Trump''
 \end{itemize} 
+\end{frame}
+
+\section{Results}
+\begin{frame}{Results: Data and Dependent Variables}
+
+\begin{figure}
+\includegraphics[width=9cm]{../plots/mean_bars.png}
+\label{fig:mean_bars}
+\caption{Per user per day means of each dependent variable in treatment and control groups during the treatment period}
+\end{figure}
+
+
+
+
 \end{frame}
 
 
@@ -138,6 +225,7 @@ short detour on the data we collected throughout the entire time frame (specify 
 
 \item Self selection in the sample: 
 \textit{Only active trump followers were selected in our study} and \textit{People had the option to opt-out}
+	\item 10 individuals asked to be withdrawn during treatment. Effect measured thus ITT effect
 \item Being recognized as a robot
 \item Bias from manipulation of the twitter feed
 \item Outcome is \textbf{likes} or \textbf{tweets} per day while the tweeting has been done at a certain time during the day...

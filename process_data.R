@@ -16,6 +16,11 @@ load("data/sample.Rda")
 load("data/sample_info.Rda")
 load("data/last_download.Rda")
 
+n_likes <- length(likes$PID)
+n_tweets <- length(tweets$PID)
+
+save(n_likes,file="data/like_n.Rdata")
+save(n_tweets,file="data/tweet_n.Rdata")
 
 
 #############################################
@@ -36,6 +41,7 @@ like_users <- likes %>%
   summarise(
     like_n = length(PID)
   )
+
 
 #############################################
 ## Get counts of n tweet data for each user on each day
@@ -63,7 +69,7 @@ sent_tweets_users <- sent_tweets %>%
 ## Create a dataframe with a row for each user*day combination
 
 days <- sort(unique(like_users$like_date))
-users <- unique(like_users$user_id)
+users <- unique(sample$user_id)
 
 user_id <- rep(users,each=length(days))
 date <- rep(days,times=length(users))
@@ -78,9 +84,10 @@ user_days <- data.frame(user_id,date)
 user_days <- user_days %>%
   left_join(like_users,by=c("date" = "like_date","user_id" = "user_id")) %>%
   left_join(tweet_users,by=c("date" = "tweet_date","user_id" = "user_id")) %>%
-  left_join(sample) %>%
+  right_join(sample) %>%
   left_join(sent_tweets_users,by=c("date" = "day","username" = "user")) %>%
   select(user_id,date,username,t_group,like_n:trump_keyword_n,sent_n,truth,location:friends_count)
+
 
 user_days$date_d <- as.Date(user_days$date)
 sent_tweets$date_d <- as.Date(sent_tweets$day)
