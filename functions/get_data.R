@@ -1,6 +1,7 @@
 get_data <- function(con) {
   sql = "SELECT * FROM all_likes
     WHERE `like_date` > '2016-04-06'
+    AND `like_date` < '2016-05-11'
   "
   
   likes <- as.data.frame(dbGetQuery(con,sql)) 
@@ -8,6 +9,7 @@ get_data <- function(con) {
   
   sql = "SELECT * FROM observed_tweets
   WHERE `tweet_date` > '2016-04-06'
+  AND `tweet_date` < '2016-05-11'
   AND reply = 0
   "
   

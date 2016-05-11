@@ -258,7 +258,9 @@ tweet_examples <- sent_tweets %>%
   arrange(PID) %>%
   filter(row_number()==1) %>%
   select(text,truth,day) %>%
-  rename(`start date` = day) %>%
+  rename(
+    `start date` = day
+    ) %>%
   mutate(
     tlength = nchar(text),
     nspaces = length(strsplit(text," ")[[1]]),
@@ -272,10 +274,17 @@ tweet_examples <- sent_tweets %>%
       "2016-05-01",
       `start date`
     )
+  ) %>%
+  ungroup() %>%
+  rename(
+    `Tweet number` = tweet_no,
+    Text = text,
+    Truth = truth,
+    `Start date` = `start date`
   )
 
 print(xtable(
-  select(tweet_examples,text,truth,`start date`),
+  select(tweet_examples,`Tweet number`,Text,Truth,`Start date`),
   align=c(
     "c",
     "c",

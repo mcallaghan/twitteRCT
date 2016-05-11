@@ -79,7 +79,13 @@ like_model <- plm(
   effect = "time"
 )
 
+coeftest(like_model, vcov=vcovHC(model.plm,type="HC0",cluster="group"))
+
 lmtest::waldtest(like_model,c("tweet2","tweet5","tweet6","tweet7"),test="F")
+
+??coefplot
+
+texreg::coefplot()
 
 
 

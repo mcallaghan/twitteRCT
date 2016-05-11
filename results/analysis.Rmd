@@ -1,0 +1,171 @@
+---
+title: "Preliminary Results"
+author: "Group 3"
+date: "April 25, 2016"
+output:
+  pdf_document:
+    fig_caption: yes
+---
+
+
+
+```{r connect,echo=FALSE,warning=FALSE,message=FALSE}
+
+setwd("..")
+
+library(RMySQL)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(plm)
+library(knitr)
+library(R.utils)
+library(stargazer)
+library(xtable)
+library(ggmap)
+
+opts_chunk$set(fig.height=8,fig.width=8,warning=FALSE,echo=FALSE,message=FALSE)
+
+sourceDirectory("functions/",modifiedOnly = FALSE)
+
+
+
+user_days <- read.csv("data/user_days.csv")
+
+
+```
+
+
+We calculate two types of time fixed effect models that use differently specified tweet dummies. In table 1, the dummies are switched on on the day the user receives a tweet and stay on. In table 2, they are switched on as before, but switched off when the user receives a subsequent tweet.
+
+We test the joint significance of all negative tweets (tweets 2,5,6 and 7).
+
+We model the effects of the tweet dummies for a list of dependent variables such that
+
+\[ y_{it} = \beta_1 T1_{it} + \beta_2 T2_{it} + \beta_3 T3_{it} + \beta_4 T4_{it} + \beta_5 T5_{it} + \beta_6 T6_{it} + \beta_7 T7_{it} + \alpha_{t} + u_{it}  \]
+
+```{r echo=FALSE,message=FALSE,warning=FALSE,results="asis",cache=TRUE}
+
+ud <- plm.data(user_days,c("user_id","date"))
+
+ind <- duplicated(ud[,1:2])
+
+ud <- ud[!ind,]
+
+depvars <- c("like_n","tweet_n","trump_rt_n",
+             "trump_mention_n","MAGA_n",
+             "trump_keyword_n")
+
+models <- list()
+
+ftests <- c("F-Test (Negative Tweets)")
+fp <- c("Pr(>F) (Negative Tweets)")
+
+i <- 0
+for (depvar in depvars) {
+  i <- i + 1
+  ud[,"y"] <- ud[,depvar]
+  model <- plm(
+    y ~ tweet1 + 
+      tweet2 + 
+      tweet3 + 
+      tweet4 + 
+      tweet5 +
+      tweet6 +
+      tweet7, 
+    data=ud, 
+    #index=c("user_id","date"),
+    model = "within", 
+    effect = "time"
+  )
+  assign(paste0("m_",depvar),model)
+
+  f <- round(lmtest::waldtest(model,c("tweet2","tweet5","tweet6","tweet7"),test="F")[2,3],3)
+  fpi <- round(lmtest::waldtest(model,c("tweet2","tweet5","tweet6","tweet7"),test="F")[2,4],3)
+  ftests <- c(ftests,f)
+  fp <- c(fp,fpi)
+}
+
+
+stargazer::stargazer(
+  m_like_n,m_tweet_n,m_trump_rt_n,m_trump_mention_n,m_MAGA_n,m_trump_keyword_n,
+  column.labels = c("likes","tweets","retweets","mentions","MAGA","keywords"),
+  add.lines=list(ftests,fp),
+  header=FALSE
+)
+
+```
+
+
+
+```{r echo=FALSE,message=FALSE,warning=FALSE,results="asis",cache=TRUE}
+
+
+depvars <- c("like_n","tweet_n","trump_rt_n",
+             "trump_mention_n","MAGA_n",
+             "trump_keyword_n")
+
+models <- list()
+
+ftests <- c("F-Test (Negative Tweets)")
+fp <- c("Pr(>F) (Negative Tweets)")
+
+i <- 0
+for (depvar in depvars) {
+  i <- i + 1
+  ud[,"y"] <- ud[,depvar]
+  model <- plm(
+    y ~ temptweet1 + 
+      temptweet2 + 
+      temptweet3 + 
+      temptweet4 + 
+      temptweet5 +
+      temptweet6 +
+      temptweet7, 
+    data=ud, 
+    #index=c("user_id","date"),
+    model = "within", 
+    effect = "time"
+  )
+  assign(paste0("m_",depvar),model)
+
+  f <- round(lmtest::waldtest(model,c("temptweet2","temptweet5","temptweet6","temptweet7"),test="F")[2,3],3)
+  fpi <- round(lmtest::waldtest(model,c("temptweet2","temptweet5","temptweet6","temptweet7"),test="F")[2,4],3)
+  ftests <- c(ftests,f)
+  fp <- c(fp,fpi)
+}
+
+
+stargazer::stargazer(
+  m_like_n,m_tweet_n,m_trump_rt_n,m_trump_mention_n,m_MAGA_n,m_trump_keyword_n,
+  column.labels = c("likes","tweets","retweets","mentions","MAGA","keywords"),
+  add.lines=list(ftests,fp),
+  header=FALSE
+)
+
+```
+
+
+For simplicity, we also run t-tests comparing the means of the treatment and control groups during the time when tweets were being sent out
+
+```{r}
+
+treatment_period <- user_days %>%
+  mutate(date_d = as.Date(date_d)) %>%
+  filter(date_d >= "2016-04-14" & date_d < "2016-05-04")
+
+
+for (y in depvars) {
+  print(y)
+  test <- t.test(
+  treatment_period[treatment_period$t_group=="T",y],
+  treatment_period[treatment_period$t_group=="C",y]
+  )
+  print(test)
+}
+
+treatment_summary <- treatment_period %>%
+  group_by(t_group)
+
+```
+

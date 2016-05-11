@@ -85,17 +85,49 @@ user_days <- user_days %>%
 user_days$date_d <- as.Date(user_days$date)
 sent_tweets$date_d <- as.Date(sent_tweets$day)
 
+save(sent_tweets,file="data/sent_tweets.Rdata")
+
 
 for (t in unique(sent_tweets$tweet_no)) {
   tdummy <- paste0("tweet",t)
+  tdummy2 <- paste0("tweetday",t)
   for(days in unique(sent_tweets[sent_tweets$tweet_no==t,"date_d"])) {
     users <- sent_tweets[sent_tweets$date_d==days,"user"]
     user_days[user_days$username %in% users & user_days$date_d>=days,tdummy] <- 1
+    #user_days[user_days$username %in% users & user_days$date_d==days,tdummy2] <- 1
   }
 }
 
-
 user_days[is.na(user_days)] <- 0
+
+user_days$temptweet1 <- ifelse(user_days$tweet2==1,
+                           0,
+                           user_days$tweet1)
+
+user_days$temptweet2 <- ifelse(user_days$tweet3==1,
+                           0,
+                           user_days$tweet2)
+
+user_days$temptweet3 <- ifelse(user_days$tweet4==1,
+                           0,
+                           user_days$tweet3)
+
+user_days$temptweet4 <- ifelse(user_days$tweet5==1,
+                           0,
+                           user_days$tweet4)
+
+
+user_days$temptweet5 <- ifelse(user_days$tweet6==1,
+                           0,
+                           user_days$tweet5)
+
+user_days$temptweet6 <- ifelse(user_days$tweet7==1,
+                           0,
+                           user_days$tweet6)
+
+user_days$temptweet7 <- user_days$tweet7
+
+
 
 write.csv(user_days,file="data/user_days.csv")
 
@@ -114,6 +146,9 @@ group_avs <-  user_days %>%
     average_sent = mean(sent_n),
     average_truth = sum(truth) / sum(sent_n)
   ) 
+
+save(group_avs,file="data/group_avs.Rdata")
+
 
 
 tweet_examples <- sent_tweets %>%
@@ -137,11 +172,81 @@ tweet_examples <- sent_tweets %>%
     )
   )
 
+save(tweet_examples,file="data/tweet_examples.Rdata")
+
+treatment_sums <- user_days %>%
+  filter(date_d > "2016-04-14" & date_d < "2016-05-03") %>%
+  group_by(t_group) %>%
+  summarise(
+    like_n = sum(like_n),
+    tweet_n = sum(tweet_n)
+  )
+
+treatment_sums$like_n <- ifelse(treatment_sums$t_group=="T",
+                                treatment_sums$like_n,
+                                treatment_sums$like_n/4420*1000
+)
+
+treatment_sums$tweet_n <- ifelse(treatment_sums$t_group=="T",
+                                treatment_sums$tweet_n,
+                                treatment_sums$tweet_n/4420*1000
+)
+
+before_treatment_sums <- user_days %>%
+  filter(date_d < "2016-04-14" & date_d > "2016-04-01") %>%
+  group_by(t_group) %>%
+  summarise(
+    like_n = sum(like_n),
+    tweet_n = sum(tweet_n)
+  )
+
+before_treatment_sums$like_n <- ifelse(before_treatment_sums$t_group=="T",
+                                before_treatment_sums$like_n,
+                                before_treatment_sums$like_n/4420*1000
+)
+
+before_treatment_sums$tweet_n <- ifelse(before_treatment_sums$t_group=="T",
+                                 before_treatment_sums$tweet_n,
+                                 before_treatment_sums$tweet_n/4420*1000
+)
 
 
+treatment_means <- user_days %>%
+  filter(date_d >= "2016-04-14" & date_d < "2016-05-04") %>%
+  group_by(t_group) %>%
+  summarise(
+    like_n = mean(like_n),
+    tweet_n = mean(tweet_n)
+  )
 
+before_treatment_means <- user_days %>%
+  filter(date_d < "2016-04-14" & date_d > "2016-04-01") %>%
+  group_by(t_group) %>%
+  summarise(
+    like_n = mean(like_n),
+    tweet_n = mean(tweet_n)
+  )
 
+treatment_period <- user_days %>%
+  filter(date_d >= "2016-04-14" & date_d < "2016-05-04")
 
+t.test(
+  treatment_period[treatment_period$t_group=="T","like_n"],
+  treatment_period[treatment_period$t_group=="C","like_n"]
+  )
+
+t.test(
+  treatment_period[treatment_period$t_group=="T","tweet_n"],
+  treatment_period[treatment_period$t_group=="C","tweet_n"]
+)
+
+t.test(
+  treatment_period[treatment_period$t_group=="T","MAGA_n"],
+  treatment_period[treatment_period$t_group=="C","MAGA_n"]
+)
+
+treatment_summary <- treatment_period %>%
+  group_by(t_group)
 
 
 

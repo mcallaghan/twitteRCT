@@ -1,0 +1,15 @@
+base
+DBI
+RMySQL
+ggplot2
+dplyr
+tidyr
+Formula
+plm
+knitr
+R.methodsS3
+R.oo
+R.utils
+stargazer
+xtable
+ggmap
