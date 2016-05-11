@@ -1,0 +1,6 @@
+\beamer@endinputifotherversion {3.36pt}
+\select@language {english}
+\beamer@sectionintoc {1}{Implementing the RCT}{3}{0}{1}
+\beamer@sectionintoc {2}{Some Descriptives}{7}{0}{2}
+\beamer@sectionintoc {3}{Main Results: Data and Dependent Variables}{10}{0}{3}
+\beamer@sectionintoc {4}{Limitations}{12}{0}{4}
