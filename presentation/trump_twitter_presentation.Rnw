@@ -158,6 +158,7 @@ Descriptive statistics before the treatment period are similar in treatment and 
 
 \begin{figure}
 \includegraphics[width=11cm]{../plots/hists.png}
+\caption{Probability density plots of treatment and control group follower and following count}
 \end{figure}
 
 \end{frame}

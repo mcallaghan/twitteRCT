@@ -65,6 +65,7 @@ stargazer::stargazer(
   column.labels = c("likes","tweets","retweets","mentions","MAGA","keywords"),
   type="latex",
   out ="tables/fe_results.tex",
+  title = "Individual tweet dummies",
   out.header = FALSE,
   add.lines=list(ftests,fp),
   se=list(ses_like_n,ses_tweet_n,ses_trump_rt_n,ses_trump_mention_n,ses_MAGA_n,ses_trump_keyword_n)
@@ -75,6 +76,7 @@ stargazer::stargazer(
   column.labels = c("likes","tweets","retweets","mentions","MAGA","keywords"),
   type="latex",
   out ="tables/fe_results_simple.tex",
+  title = "Tweet truth dummies",
   out.header = FALSE,
   add.lines=list(ftests,fp),
   se=list(dses_like_n,dses_tweet_n,dses_trump_rt_n,dses_trump_mention_n,dses_MAGA_n,dses_trump_keyword_n)
