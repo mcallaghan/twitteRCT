@@ -51,6 +51,76 @@ for (depvar in depvars) {
 
 #lmtest::coeftest(m_like_n, vcov=vcovHC(m_like_n,type="HC0",cluster="group"))
 
+model1 <- plm(
+  like_n ~ temptweet1 + 
+    temptweet2 + 
+    temptweet3 + 
+    temptweet4 + 
+    temptweet5 +
+    temptweet6 +
+    temptweet7, 
+  data=ud, 
+  #index=c("user_id","date"),
+  model = "within"
+  #effect = c("time","group")
+)
+
+ses1 = lmtest::coeftest(model1, vcovHC(model1,type="HC0",cluster="group"))
+
+model2 <- plm(
+  like_n ~ temptweet1 + 
+    temptweet2 + 
+    temptweet3 + 
+    temptweet4 + 
+    temptweet5 +
+    temptweet6 +
+    temptweet7, 
+  data=ud, 
+  #index=c("user_id","date"),
+  model = "within",
+  effect = "twoway"
+)
+
+
+ses2 <- lmtest::coeftest(model2, vcovHC(model2,type="HC0",cluster="group"))
+
+stargazer::stargazer(model1,model2,type="text",se=list(ses1[,2],ses2[,2]))
+
+ud$negdummy <- ifelse(
+  ud$temptweet2 == 1 | 
+    ud$temptweet5 == 1 |
+    ud$temptweet6 == 1 |
+    ud$temptweet7 == 1,
+  1,
+  0
+)
+
+ud$posdummy <- ifelse(
+  ud$temptweet3 == 1 |
+    ud$tweet4 == 1,
+  1,
+  0
+)
+
+ud$neutdummy <- ifelse(
+  ud$temptweet1 == 1,
+  1,
+  0
+)
+
+model3 <- plm(
+  like_n ~ posdummy + 
+    negdummy +
+    neutdummy,
+  data=ud, 
+  #index=c("user_id","date"),
+  model = "within",
+  effect = "twoway"
+)
+
+
+ses2 <- lmtest::coeftest(model3, vcovHC(model3,type="HC0",cluster="group"))
+
 
 stargazer::stargazer(
   m_like_n,m_tweet_n,m_trump_rt_n,m_trump_mention_n,m_MAGA_n,m_trump_keyword_n,

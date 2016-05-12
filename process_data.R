@@ -134,6 +134,36 @@ user_days$temptweet6 <- ifelse(user_days$tweet7==1,
 
 user_days$temptweet7 <- user_days$tweet7
 
+user_days$temptweet7 <- ifelse(
+  lag(user_days$temptweet7,2) == 1,
+  0,
+  user_days$temptweet7
+)
+
+user_days[is.na(user_days)] <- 0
+
+user_days$negdummy <- ifelse(
+  user_days$temptweet2 == 1 | 
+    user_days$temptweet5 == 1 |
+    user_days$temptweet6 == 1 |
+    user_days$temptweet7 == 1,
+  1,
+  0
+)
+
+user_days$posdummy <- ifelse(
+  user_days$temptweet3 == 1 |
+    user_days$tweet4 == 1,
+  1,
+  0
+)
+
+user_days$neutdummy <- ifelse(
+  user_days$temptweet1 == 1,
+  1,
+  0
+)
+
 
 
 write.csv(user_days,file="data/user_days.csv")

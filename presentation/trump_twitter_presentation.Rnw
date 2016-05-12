@@ -183,6 +183,15 @@ From the like and tweet data we collected, we used the following as dependent va
 
 \end{frame}
 
+\begin{frame}{Results: Fixed Effects Model}
+
+{\tiny
+\input{../tables/fe_results_simple.tex}
+}
+
+
+\end{frame}
+
 
 \section{Limitations}
 \begin{frame}{Limitations}
