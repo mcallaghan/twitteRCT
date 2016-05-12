@@ -98,6 +98,16 @@ load("../data/like_n.Rdata")
 		\end{figure}
 \end{frame}
 
+\begin{frame}{Implementation}
+	\begin{itemize}
+	\item We created \num{5} similar Twitter accounts % with same 	profile picture and information but different names 
+	(\textbf{@twi\_truth, @truth\_to\_twitt, @truthToTwitt, @SpeakingTw, @facts\_for\_twitt}) - see figure  \ref{fig:twit_prof}
+	\item We regularly created Twitter Apps for each account. Robots used these to automatically tweet the treatment groups
+	\item We sent nearly \num{7000} tweets over \num{19} days (see table \ref{table:example_tweets})
+	\item Our server automatically monitored our observation group, recording \num{\Sexpr{n_tweets}} tweets and \num{\Sexpr{n_likes}} likes
+	\end{itemize}
+\end{frame}
+
 
 \begin{frame}{Implementation}
 \begin{table}
@@ -107,10 +117,22 @@ load("../data/like_n.Rdata")
 	}
 	\end{center}
 \end{table}	
+\end{frame}
 
-%\item how many tweets (+ maybe list of the tweets)
-%\item graph showing when the tweets were sent over the sample period 
-%\item some information on the level of (unexpected) engagement of our treatment group with us (number of retweets and likes of our tweets, number of followers, number and examples of replies to our tweets)
+\begin{frame}{Implementation}
+	\begin{itemize}
+	\item We created \num{5} similar Twitter accounts % with same 	profile picture and information but different names 
+	(\textbf{@twi\_truth, @truth\_to\_twitt, @truthToTwitt, @SpeakingTw, @facts\_for\_twitt}) - see figure  \ref{fig:twit_prof}
+	\item We regularly created Twitter Apps for each account. Robots used these to automatically tweet the treatment groups
+	\item We sent nearly \num{7000} tweets over \num{19} days (see table \ref{table:example_tweets})
+	\item Our server automatically monitored our observation group, recording \num{\Sexpr{n_tweets}} tweets and \num{\Sexpr{n_likes}} likes
+	\end{itemize}
+	  We received
+  \begin{itemize}
+    \item 164 retweets
+    \item 369 likes
+    \item 417 replies
+  \end{itemize}
 \end{frame}
 
 \begin{frame}{Responses}
@@ -118,7 +140,7 @@ load("../data/like_n.Rdata")
   \begin{itemize}
     \item 164 retweets
     \item 369 likes
-    \item 417 responses
+    \item 417 replies
   \end{itemize}
 \end{frame}
 
@@ -204,7 +226,7 @@ From the like and tweet data we collected, we used the following as dependent va
 \framesubtitle{Likes}
 
 \begin{figure}
-\includegraphics[width=11cm]{../plots/likes_tweets.jpg}
+\includegraphics[width=11cm]{../plots/maga_tweets.jpg}
 \label{fig:likes_time}
 \caption{Likes over time}
 \end{figure}
@@ -214,7 +236,7 @@ From the like and tweet data we collected, we used the following as dependent va
 \begin{frame}{Results: Differences over time}
 
 \begin{figure}
-\includegraphics[width=11cm]{../plots/maga_tweets.jpg}
+\includegraphics[width=11cm]{../plots/likes_tweets.jpg}
 \label{fig:maga_time}
 \caption{\#MakeAmericaGreatAgain over time}
 \end{figure}
@@ -241,22 +263,6 @@ From the like and tweet data we collected, we used the following as dependent va
 
 
 \end{frame}
-
-
-\section{Limitations}
-\begin{frame}{Limitations}
-\begin{itemize}
-
-\item Self selection in the sample: 
-\textit{Only active trump followers were selected in our study} and \textit{People had the option to opt-out}
-	\item 10 individuals asked to be withdrawn during treatment. Effect measured thus ITT effect
-\item Being recognized as a robot
-\item Bias from manipulation of the twitter feed
-\item Outcome is \textbf{likes} or \textbf{tweets} per day while the tweeting has been done at a certain time during the day...
-\item Collinearity of variables in case of the lasting turn-on model!
-\end{itemize}
-\end{frame}
-
 
 
 
@@ -286,6 +292,18 @@ Results are unclear:
 \caption{Your not changing any minds}
 \end{figure}
 
+\end{frame}
+
+%\section{Limitations}
+\begin{frame}{Limitations}
+\begin{itemize}
+
+\item The results only apply to a limited population of active twitter users who tweet about Trump
+\item Attrition: 10 individuals asked to drop out
+\item We ``only'' measure an ITT effect:
+\item Bias from manipulation of the twitter feed
+\item Uncertainty about the time when the tweets were seen
+\end{itemize}
 \end{frame}
 		
 \end{document}
