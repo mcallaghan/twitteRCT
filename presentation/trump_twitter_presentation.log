@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.6.10)  12 MAY 2016 13:00
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.6.10)  12 MAY 2016 13:05
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1699,68 +1699,70 @@ Underfull \hbox (badness 1533) in paragraph at lines 11--11
 
 ) [7
 
-] <twitter_comment.PNG, id=119, 747.9945pt x 425.79076pt>
+] [8
+
+] <twitter_comment.PNG, id=125, 747.9945pt x 425.79076pt>
 File: twitter_comment.PNG Graphic file (type png)
 
 <use twitter_comment.PNG>
-Package pdftex.def Info: twitter_comment.PNG used on input line 169.
+Package pdftex.def Info: twitter_comment.PNG used on input line 178.
 (pdftex.def)             Requested size: 336.59442pt x 191.60406pt.
- [8
+ [9
 
  <./twitter_comment.PNG>]
-(./trump_twitter_presentation.toc) [9
+(./trump_twitter_presentation.toc) [10
 
 ]
-<../tables/descriptive.png, id=137, 729.72626pt x 299.1175pt>
+<../tables/descriptive.png, id=143, 729.72626pt x 299.1175pt>
 File: ../tables/descriptive.png Graphic file (type png)
 
 <use ../tables/descriptive.png>
-Package pdftex.def Info: ../tables/descriptive.png used on input line 188.
+Package pdftex.def Info: ../tables/descriptive.png used on input line 197.
 (pdftex.def)             Requested size: 284.52756pt x 116.62796pt.
- [10
+ [11
 
  <../tables/descriptive.png>]
-<../plots/hists.png, id=145, 803.0pt x 501.875pt>
+<../plots/hists.png, id=151, 803.0pt x 501.875pt>
 File: ../plots/hists.png Graphic file (type png)
  <use ../plots/hists.png>
-Package pdftex.def Info: ../plots/hists.png used on input line 198.
+Package pdftex.def Info: ../plots/hists.png used on input line 207.
 (pdftex.def)             Requested size: 312.9803pt x 195.61559pt.
 
-[11
-
- <../plots/hists.png (PNG copy)>] (./trump_twitter_presentation.toc)
 [12
 
-] [13
+ <../plots/hists.png (PNG copy)>] (./trump_twitter_presentation.toc)
+[13
 
-] <../plots/mean_bars.png, id=170, 578.16pt x 361.35pt>
+] [14
+
+] <../plots/mean_bars.png, id=176, 578.16pt x 361.35pt>
 File: ../plots/mean_bars.png Graphic file (type png)
 
 <use ../plots/mean_bars.png>
-Package pdftex.def Info: ../plots/mean_bars.png used on input line 222.
+Package pdftex.def Info: ../plots/mean_bars.png used on input line 231.
 (pdftex.def)             Requested size: 256.0748pt x 160.0421pt.
- [14
+ [15
 
  <../plots/mean_bars.png (PNG copy)>]
-(../tables/mean_t_tests.tex) [15
+(../tables/mean_t_tests.tex) [16
 
 ]
-<../plots/likes_tweets.jpg, id=185, 722.7pt x 406.51875pt>
+<../plots/likes_tweets.jpg, id=191, 722.7pt x 406.51875pt>
 File: ../plots/likes_tweets.jpg Graphic file (type jpg)
 
 <use ../plots/likes_tweets.jpg>
-Package pdftex.def Info: ../plots/likes_tweets.jpg used on input line 246.
+Package pdftex.def Info: ../plots/likes_tweets.jpg used on input line 255.
 (pdftex.def)             Requested size: 312.9803pt x 176.05264pt.
- [16
+ [17
 
  <../plots/likes_tweets.jpg>]
-<../plots/maga_tweets.jpg, id=194, 722.7pt x 406.51875pt>
+<../plots/maga_tweets.jpg, id=200, 722.7pt x 406.51875pt>
 File: ../plots/maga_tweets.jpg Graphic file (type jpg)
 
 <use ../plots/maga_tweets.jpg>
-Package pdftex.def Info: ../plots/maga_tweets.jpg used on input line 256.
+Package pdftex.def Info: ../plots/maga_tweets.jpg used on input line 265.
 (pdftex.def)             Requested size: 312.9803pt x 176.05264pt.
- [17
+ [18
 
  <../plots/maga_tweets.jpg>]
 (../tables/fe_results.tex
@@ -1768,33 +1770,33 @@ Package pdftex.def Info: ../plots/maga_tweets.jpg used on input line 256.
 Package hyperref Warning: Ignoring empty anchor on input line 6.
 
 )
-Overfull \vbox (16.31511pt too high) detected at line 268
+Overfull \vbox (16.31511pt too high) detected at line 277
  []
 
-[18
+[19
 
 ] (../tables/fe_results_simple.tex
 
 Package hyperref Warning: Ignoring empty anchor on input line 6.
 
-) [19
+) [20
 
-] (./trump_twitter_presentation.toc) [20
+] (./trump_twitter_presentation.toc) [21
 
-] [21
-
-]
-(./trump_twitter_presentation.toc) [22
-
-] [23
+] [22
 
 ]
-<../minds.png, id=251, 773.89125pt x 255.95625pt>
+(./trump_twitter_presentation.toc) [23
+
+] [24
+
+]
+<../minds.png, id=257, 773.89125pt x 255.95625pt>
 File: ../minds.png Graphic file (type png)
  <use ../minds.png>
-Package pdftex.def Info: ../minds.png used on input line 323.
+Package pdftex.def Info: ../minds.png used on input line 332.
 (pdftex.def)             Requested size: 256.0748pt x 84.69234pt.
- [24
+ [25
 
  <../minds.png>]
 \tf@nav=\write6
@@ -1806,11 +1808,11 @@ Package pdftex.def Info: ../minds.png used on input line 323.
 \tf@snm=\write8
 \openout8 = `trump_twitter_presentation.snm'.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 325.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 325.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 334.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 334.
  (./trump_twitter_presentation.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 325.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 325.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 334.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 334.
 Package rerunfilecheck Info: File `trump_twitter_presentation.out' has not chan
 ged.
 (rerunfilecheck)             Checksum: A69CD7FDF1951DD7A72BCD62CF2480F5;239.
@@ -1822,13 +1824,13 @@ LaTeX Font Warning: Size substitutions with differences
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 325.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 334.
  ) 
 Here is how much of TeX's memory you used:
- 29916 strings out of 495028
- 592197 string characters out of 6181497
+ 29920 strings out of 495028
+ 592232 string characters out of 6181497
  689564 words of memory out of 5000000
- 32346 multiletter control sequences out of 15000+600000
+ 32348 multiletter control sequences out of 15000+600000
  16686 words of font info for 63 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  49i,16n,67p,10429b,723s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1843,10 +1845,10 @@ ic/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfo
 nts/cm/cmr9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/c
 msy5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.p
 fb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti7.pfb>
-Output written on trump_twitter_presentation.pdf (24 pages, 1121479 bytes).
+Output written on trump_twitter_presentation.pdf (25 pages, 1122073 bytes).
 PDF statistics:
- 315 PDF objects out of 1000 (max. 8388607)
- 249 compressed objects within 3 object streams
- 61 named destinations out of 1000 (max. 500000)
+ 322 PDF objects out of 1000 (max. 8388607)
+ 255 compressed objects within 3 object streams
+ 63 named destinations out of 1000 (max. 500000)
  159 words of extra memory for PDF output out of 10000 (max. 10000000)
 
