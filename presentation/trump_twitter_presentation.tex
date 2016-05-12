@@ -116,7 +116,7 @@
 %----------Beginning of Slides----------%
 
 \section{Implementation}
-\begin{frame} {Main changes}
+\begin{frame} {Main Changes}
 	\begin{itemize}
 	\item We only focussed on Trump, not Clinton
 	\item Our sample was drawn from unconnected accounts which had recently liked a Trump tweet (4420)
@@ -157,6 +157,15 @@
 %\item how many tweets (+ maybe list of the tweets)
 %\item graph showing when the tweets were sent over the sample period 
 %\item some information on the level of (unexpected) engagement of our treatment group with us (number of retweets and likes of our tweets, number of followers, number and examples of replies to our tweets)
+\end{frame}
+
+\begin{frame}{Responses}
+		\begin{figure}
+			\begin{centering}
+  	\includegraphics[scale=.45]{twitter_comment.PNG}
+  \caption{Some interesting comments}
+			\end{centering}
+		\end{figure}
 \end{frame}
 
 
@@ -220,6 +229,24 @@ From the like and tweet data we collected, we used the following as dependent va
 
 \end{frame}
 
+
+
+
+
+%%%%%%%%%% Graphs
+\begin{frame}{Results: Differences over time}
+
+\begin{figure}
+\includegraphics[width=9cm]{../plots/likes_tweets.jpg}
+%\label{fig:likes_time}
+\caption{Likes over time}
+\end{figure}
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%
+
 \begin{frame}{Results: Fixed Effects Model}
 
 {\tiny
@@ -256,13 +283,32 @@ From the like and tweet data we collected, we used the following as dependent va
 
 
 
-\begin{frame}{Interesting}
-		\begin{figure}
-			\begin{centering}
-  	\includegraphics[scale=.45]{twitter_comment.PNG}
-  \caption{Some interesting comments}
-			\end{centering}
-		\end{figure}
+\section{Conclusion}
+
+\begin{frame}{Interpretation of results}
+Two different hypotheses:
+\begin{enumerate}
+  \item rational updaters
+  \item motivated reasoners
+\end{enumerate}
+
+Results are unclear:
+\begin{itemize}
+  \item Some changes in engagement with Trump are observable
+  \item Different variables react in different directions
+  \item Hard to attribute effects to individual tweets or to truth levels of tweets
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Conclusion}
+
+\begin{figure}
+\includegraphics[width=9cm]{../minds.png}
+\label{fig:minds}
+\caption{Your not changing any minds}
+\end{figure}
+
 \end{frame}
 		
 \end{document}
