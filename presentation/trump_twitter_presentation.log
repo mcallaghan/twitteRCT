@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.6.10)  12 MAY 2016 13:05
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.6.10)  12 MAY 2016 13:12
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1717,7 +1717,7 @@ Package pdftex.def Info: twitter_comment.PNG used on input line 178.
 File: ../tables/descriptive.png Graphic file (type png)
 
 <use ../tables/descriptive.png>
-Package pdftex.def Info: ../tables/descriptive.png used on input line 197.
+Package pdftex.def Info: ../tables/descriptive.png used on input line 199.
 (pdftex.def)             Requested size: 284.52756pt x 116.62796pt.
  [11
 
@@ -1725,7 +1725,7 @@ Package pdftex.def Info: ../tables/descriptive.png used on input line 197.
 <../plots/hists.png, id=151, 803.0pt x 501.875pt>
 File: ../plots/hists.png Graphic file (type png)
  <use ../plots/hists.png>
-Package pdftex.def Info: ../plots/hists.png used on input line 207.
+Package pdftex.def Info: ../plots/hists.png used on input line 209.
 (pdftex.def)             Requested size: 312.9803pt x 195.61559pt.
 
 [12
@@ -1739,7 +1739,7 @@ Package pdftex.def Info: ../plots/hists.png used on input line 207.
 File: ../plots/mean_bars.png Graphic file (type png)
 
 <use ../plots/mean_bars.png>
-Package pdftex.def Info: ../plots/mean_bars.png used on input line 231.
+Package pdftex.def Info: ../plots/mean_bars.png used on input line 233.
 (pdftex.def)             Requested size: 256.0748pt x 160.0421pt.
  [15
 
@@ -1747,21 +1747,21 @@ Package pdftex.def Info: ../plots/mean_bars.png used on input line 231.
 (../tables/mean_t_tests.tex) [16
 
 ]
-<../plots/likes_tweets.jpg, id=191, 722.7pt x 406.51875pt>
+<../plots/likes_tweets.jpg, id=191, 3011.25pt x 1694.33pt>
 File: ../plots/likes_tweets.jpg Graphic file (type jpg)
 
 <use ../plots/likes_tweets.jpg>
-Package pdftex.def Info: ../plots/likes_tweets.jpg used on input line 255.
-(pdftex.def)             Requested size: 312.9803pt x 176.05264pt.
+Package pdftex.def Info: ../plots/likes_tweets.jpg used on input line 257.
+(pdftex.def)             Requested size: 312.9803pt x 176.08723pt.
  [17
 
  <../plots/likes_tweets.jpg>]
-<../plots/maga_tweets.jpg, id=200, 722.7pt x 406.51875pt>
+<../plots/maga_tweets.jpg, id=200, 3010.24625pt x 1693.32625pt>
 File: ../plots/maga_tweets.jpg Graphic file (type jpg)
 
 <use ../plots/maga_tweets.jpg>
-Package pdftex.def Info: ../plots/maga_tweets.jpg used on input line 265.
-(pdftex.def)             Requested size: 312.9803pt x 176.05264pt.
+Package pdftex.def Info: ../plots/maga_tweets.jpg used on input line 267.
+(pdftex.def)             Requested size: 312.9803pt x 176.03459pt.
  [18
 
  <../plots/maga_tweets.jpg>]
@@ -1770,7 +1770,7 @@ Package pdftex.def Info: ../plots/maga_tweets.jpg used on input line 265.
 Package hyperref Warning: Ignoring empty anchor on input line 6.
 
 )
-Overfull \vbox (16.31511pt too high) detected at line 277
+Overfull \vbox (16.31511pt too high) detected at line 279
  []
 
 [19
@@ -1794,7 +1794,7 @@ Package hyperref Warning: Ignoring empty anchor on input line 6.
 <../minds.png, id=257, 773.89125pt x 255.95625pt>
 File: ../minds.png Graphic file (type png)
  <use ../minds.png>
-Package pdftex.def Info: ../minds.png used on input line 332.
+Package pdftex.def Info: ../minds.png used on input line 334.
 (pdftex.def)             Requested size: 256.0748pt x 84.69234pt.
  [25
 
@@ -1808,11 +1808,11 @@ Package pdftex.def Info: ../minds.png used on input line 332.
 \tf@snm=\write8
 \openout8 = `trump_twitter_presentation.snm'.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 334.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 334.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 336.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 336.
  (./trump_twitter_presentation.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 334.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 334.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 336.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 336.
 Package rerunfilecheck Info: File `trump_twitter_presentation.out' has not chan
 ged.
 (rerunfilecheck)             Checksum: A69CD7FDF1951DD7A72BCD62CF2480F5;239.
@@ -1824,7 +1824,7 @@ LaTeX Font Warning: Size substitutions with differences
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 334.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 336.
  ) 
 Here is how much of TeX's memory you used:
  29920 strings out of 495028
@@ -1845,7 +1845,7 @@ ic/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfo
 nts/cm/cmr9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/c
 msy5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.p
 fb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti7.pfb>
-Output written on trump_twitter_presentation.pdf (25 pages, 1122073 bytes).
+Output written on trump_twitter_presentation.pdf (25 pages, 1961118 bytes).
 PDF statistics:
  322 PDF objects out of 1000 (max. 8388607)
  255 compressed objects within 3 object streams
