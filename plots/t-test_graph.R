@@ -7,6 +7,7 @@ library(R.utils)
 
 sourceDirectory("functions/",modifiedOnly = FALSE)
 
+
 user_days <- read.csv("data/user_days.csv")
 
 ## dependent variables:
@@ -25,13 +26,14 @@ treatment_period <- user_days %>%
     `Avg likes` = like_n,
     `Avg #MAGA` = MAGA_n,
     `Avg mentions` = trump_mention_n,
-    `Avg retweets` = trump_rt_n
+    `Avg retweets` = trump_rt_n,
+    `Avg tweets` = tweet_n
   )
 
 
 ## make bar chart for dependent variables
 treatment_period_narrow <- treatment_period %>%
-  gather(var,value,`Avg likes`:`Avg tweet "Trump"`, -tweet_n) 
+  gather(var,value,`Avg likes`:`Avg tweet "Trump"`) 
 
 averages <- data.frame(variable=unique(treatment_period_narrow$var))
 
@@ -65,7 +67,7 @@ averages$`p-value` <-
     
 
 print(
-  xtable(
+  xtable::xtable(
     averages,
     caption="A t-test on the difference in means between treatment and control groups",
     label="table:diff_means"
@@ -77,7 +79,7 @@ print(
 
 treatment_period_summary <- treatment_period_narrow %>%
   group_by(t_group,var) %>%
-  summarise(
+  dplyr::summarise(
     mean = mean(value),
     SEM = stderr(value),
     uci = mean+SEM,
@@ -103,7 +105,7 @@ ggplot() +
   facet_wrap(~var,scales="free",drop=TRUE) +
   theme_bw() +
   theme(
-    legend.position = c(0.85,0.25),
+    #legend.position = c(0.85,0.25),
     axis.ticks.x = element_blank(),
     axis.text.x = element_blank()
   )
